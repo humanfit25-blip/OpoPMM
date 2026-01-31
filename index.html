@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎖️ PMM COMMAND CENTER v2.0 - Sistema Integral de Estudio</title>
+
+```
+<!-- PWA Config -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ffd700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PMM Center">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230a0a12' width='100' height='100' rx='20'/><text x='50' y='65' text-anchor='middle' font-size='50'>🎖️</text></svg>">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg:#0a0a12;--bg2:#0f0f1a;--bg3:#14141f;
+        --gold:#ffd700;--gold-dim:#b8860b;
+        --cyan:#00d4ff;--green:#10b981;--red:#ef4444;--orange:#f97316;
+        --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;
+        --border:#1e293b;--accent:#6366f1;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    
+    /* === HEADER PRINCIPAL === */
+    .main-header{background:linear-gradient(180deg,rgba(0,0,0,.9),rgba(10,10,18,.95));border-bottom:3px solid var(--gold);padding:15px 20px;position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo-badge{width:45px;height:45px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 15px rgba(255,215,0,.3)}50%{box-shadow:0 0 30px rgba(255,215,0,.6)}}
+    .logo h1{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:2px}
+    .logo p{font-size:.7rem;color:var(--text3)}
+    
+    /* === NAV TABS === */
+    .nav-tabs{display:flex;gap:5px;flex-wrap:wrap}
+    .nav-tab{padding:10px 18px;background:var(--bg3);border:2px solid var(--border);border-radius:10px;color:var(--text2);font-weight:600;cursor:pointer;transition:all .3s;font-size:.85rem;display:flex;align-items:center;gap:6px}
+    .nav-tab:hover{border-color:var(--gold);color:var(--gold)}
+    .nav-tab.active{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--bg);border-color:var(--gold)}
+    .nav-tab-icon{font-size:1rem}
+    
+    /* === STATS HEADER === */
+    .header-stats{display:flex;gap:15px}
+    .h-stat{text-align:center;padding:5px 12px;background:rgba(255,215,0,.1);border-radius:8px;border:1px solid rgba(255,215,0,.2)}
+    .h-stat-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--gold);font-weight:700}
+    .h-stat-lbl{font-size:.65rem;color:var(--text3);text-transform:uppercase}
+    
+    /* === CONTENIDO PRINCIPAL === */
+    .main-content{margin-top:85px;min-height:calc(100vh - 85px)}
+    .module{display:none;padding:20px;max-width:1400px;margin:0 auto}
+    .module.active{display:block;animation:fadeIn .4s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+    
+    /* === CARDS GENERALES === */
+    .card{background:var(--bg3);border:1px solid var(--border);border-radius:15px;padding:25px;margin-bottom:20px;position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan))}
+    .card-title{font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:10px;letter-spacing:1px}
+    
+    /* === BIBLIOTECA === */
+    .bib-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;min-height:calc(100vh - 130px)}
+    @media(max-width:900px){.bib-grid{grid-template-columns:1fr}}
+    .bib-sidebar{background:var(--bg2);border:1px solid var(--border);border-radius:15px;padding:20px;height:fit-content;position:sticky;top:100px;max-height:calc(100vh - 120px);overflow-y:auto}
+    .bib-search{width:100%;padding:12px 15px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.9rem;margin-bottom:15px}
+    .bib-search:focus{outline:none;border-color:var(--gold)}
+    .bib-nav-title{font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin:15px 0 10px;font-weight:600}
+    .bib-nav-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:5px;border-left:3px solid transparent}
+    .bib-nav-item:hover{background:rgba(255,215,0,.1)}
+    .bib-nav-item.active{background:rgba(255,215,0,.15);border-left-color:var(--gold)}
+    .bib-nav-item .icon{font-size:1.2rem}
+    .bib-nav-item .info{flex:1}
+    .bib-nav-item .title{font-weight:600;font-size:.9rem}
+    .bib-nav-item .sub{font-size:.75rem;color:var(--text3)}
+    .bib-content{background:var(--bg2);border:1px solid var(--border);border-radius:15px;padding:30px;max-height:calc(100vh - 120px);overflow-y:auto}
+    .bib-article h2{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:var(--gold);margin:30px 0 15px;padding-left:15px;border-left:3px solid var(--gold)}
+    .bib-article h3{font-size:1.1rem;color:var(--cyan);margin:20px 0 10px}
+    .bib-article p{line-height:1.8;margin-bottom:15px;color:var(--text2)}
+    .bib-article ul{margin:15px 0;padding-left:25px}
+    .bib-article li{margin-bottom:8px;line-height:1.6}
+    .highlight{background:rgba(255,215,0,.1);border:1px solid var(--gold);border-radius:10px;padding:15px 20px;margin:20px 0}
+    .highlight.info{background:rgba(0,212,255,.1);border-color:var(--cyan)}
+    .highlight.danger{background:rgba(239,68,68,.1);border-color:var(--red)}
+    .highlight.success{background:rgba(16,185,129,.1);border-color:var(--green)}
+    .highlight-title{font-weight:700;font-size:.85rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+    .highlight .highlight-title{color:var(--gold)}
+    .highlight.info .highlight-title{color:var(--cyan)}
+    .highlight.danger .highlight-title{color:var(--red)}
+    .highlight.success .highlight-title{color:var(--green)}
+    .legal-box{font-family:'JetBrains Mono',monospace;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:15px;margin:15px 0;font-size:.9rem;line-height:1.7}
+    .legal-box .art{color:var(--cyan);font-weight:600}
+    .legal-box .pena{color:var(--gold)}
+    
+    /* === TESTS === */
+    .test-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:30px}
+    .test-mode-card{background:linear-gradient(145deg,rgba(255,215,0,.05),var(--bg3));border:2px solid var(--border);border-radius:15px;padding:25px;cursor:pointer;transition:all .3s;text-align:center}
+    .test-mode-card:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:0 10px 30px rgba(255,215,0,.1)}
+    .test-mode-card .icon{font-size:2.5rem;margin-bottom:15px}
+    .test-mode-card .name{font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--gold);margin-bottom:8px}
+    .test-mode-card .desc{font-size:.85rem;color:var(--text3)}
+    .test-tema-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-top:20px}
+    .test-tema-btn{background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:15px 10px;cursor:pointer;transition:all .2s;text-align:center}
+    .test-tema-btn:hover{border-color:var(--gold);background:rgba(255,215,0,.1)}
+    .test-tema-btn .icon{font-size:1.5rem;margin-bottom:8px}
+    .test-tema-btn .name{font-size:.75rem;font-weight:600}
+    .test-area{display:none}
+    .test-area.active{display:block}
+    .test-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:15px}
+    .test-badge{background:var(--gold);color:var(--bg);padding:6px 15px;border-radius:20px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:.8rem}
+    .test-timer{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:var(--gold)}
+    .test-progress{height:5px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden}
+    .test-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .5s}
+    .question-card{background:var(--bg);border:2px solid var(--border);border-radius:15px;padding:25px;margin-bottom:20px;position:relative}
+    .q-number{position:absolute;top:-12px;left:20px;background:var(--gold);color:var(--bg);padding:4px 15px;border-radius:15px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:.85rem}
+    .q-text{font-size:1.1rem;line-height:1.7;margin-top:10px}
+    .options{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+    .opt-btn{background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:15px;text-align:left;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:12px;font-size:.95rem}
+    .opt-btn:hover:not(.disabled){border-color:var(--gold);background:rgba(255,215,0,.1);transform:translateX(5px)}
+    .opt-btn .letter{background:var(--border);color:var(--text);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-weight:700;flex-shrink:0}
+    .opt-btn.correct{border-color:var(--green);background:rgba(16,185,129,.2)}.opt-btn.correct .letter{background:var(--green)}
+    .opt-btn.incorrect{border-color:var(--red);background:rgba(239,68,68,.2);animation:shake .5s}.opt-btn.incorrect .letter{background:var(--red)}
+    .opt-btn.disabled{cursor:not-allowed;opacity:.7}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+    .feedback{display:none;background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:20px;margin-top:15px}
+    .feedback.show{display:block}
+    .feedback-title{font-family:'Orbitron',sans-serif;font-size:1rem;margin-bottom:10px}
+    .feedback-title.correct{color:var(--green)}
+    .feedback-title.incorrect{color:var(--red)}
+    .feedback-exp{color:var(--text2);font-size:.9rem;line-height:1.6}
+    .feedback-art{margin-top:10px;padding:10px;background:rgba(255,215,0,.1);border-left:3px solid var(--gold);font-family:'JetBrains Mono',monospace;font-size:.85rem}
+    .test-btns{display:flex;gap:15px;margin-top:20px;flex-wrap:wrap}
+    .btn{padding:12px 25px;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+    .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--bg)}
+    .btn-gold:hover{box-shadow:0 5px 20px rgba(255,215,0,.4);transform:translateY(-2px)}
+    .btn-outline{background:transparent;border:2px solid var(--gold);color:var(--gold)}
+    .btn-red{background:linear-gradient(135deg,var(--red),#b02a37);color:white}
+    .btn-green{background:linear-gradient(135deg,var(--green),#059669);color:white}
+    .test-results{display:none;text-align:center;padding:40px 20px}
+    .test-results.active{display:block}
+    .results-icon{font-size:4rem;margin-bottom:20px;animation:bounce 1s infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+    .results-title{font-family:'Orbitron',sans-serif;font-size:2rem;margin-bottom:10px}
+    .results-title.win{color:var(--green)}.results-title.lose{color:var(--red)}
+    .results-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:15px;max-width:500px;margin:25px auto}
+    .r-stat{background:rgba(255,215,0,.1);border:1px solid var(--border);border-radius:10px;padding:15px}
+    .r-stat-val{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:var(--gold)}
+    .r-stat-lbl{font-size:.75rem;color:var(--text3);margin-top:5px}
+    
+    /* === ANALYTICS === */
+    .analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+    .stat-big{text-align:center;padding:30px}
+    .stat-big-val{font-family:'Orbitron',sans-serif;font-size:3rem;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-big-lbl{font-size:.9rem;color:var(--text3);margin-top:5px}
+    .subject-item{display:flex;align-items:center;gap:15px;padding:12px 0;border-bottom:1px solid var(--border)}
+    .subject-item:last-child{border-bottom:none}
+    .subject-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+    .subject-info{flex:1}
+    .subject-name{font-weight:600;margin-bottom:5px}
+    .subject-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+    .subject-bar-fill{height:100%;border-radius:3px;transition:width 1s}
+    .subject-pct{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;min-width:50px;text-align:right}
+    
+    /* === PLAN === */
+    .plan-header{text-align:center;margin-bottom:30px}
+    .plan-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:var(--gold);margin-bottom:10px}
+    .plan-lema{color:var(--text2);font-size:1rem}
+    .week-progress{background:var(--bg);border-radius:15px;height:50px;position:relative;overflow:hidden;border:2px solid var(--border);margin:20px 0}
+    .week-progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold-dim),var(--green));border-radius:13px;transition:width .8s;display:flex;align-items:center;justify-content:flex-end;padding-right:15px}
+    .week-progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s infinite}
+    @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    .week-pct{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--bg);z-index:1}
+    .schedule-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:10px;overflow:hidden}
+    .schedule-table th{background:linear-gradient(180deg,var(--gold),var(--gold-dim));color:var(--bg);padding:12px;font-family:'Orbitron',sans-serif;font-size:.8rem}
+    .schedule-table td{background:var(--bg);padding:12px;border-bottom:1px solid var(--border);font-size:.85rem}
+    .schedule-table tr:hover td{background:rgba(255,215,0,.05)}
+    .task-tag{display:inline-block;padding:3px 8px;border-radius:5px;font-size:.75rem;margin:2px;font-weight:600}
+    .tag-tests{background:#17a2b8}.tag-pdf{background:#fd7e14}.tag-repaso{background:#20c997}.tag-sim{background:#6f42c1}
+    .check-cell{text-align:center}
+    .check-btn{width:28px;height:28px;border-radius:6px;border:2px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;font-size:1rem;transition:all .2s}
+    .check-btn.done{background:var(--gold);color:var(--bg)}
+    .motivation-box{background:linear-gradient(135deg,rgba(255,215,0,.1),var(--bg3));border:2px solid var(--gold);border-radius:15px;padding:30px;text-align:center;margin-top:20px}
+    .motivation-quote{font-size:1.2rem;font-style:italic;color:var(--gold);line-height:1.6;margin-bottom:15px}
+    .motivation-author{color:var(--text3);font-size:.9rem}
+    
+    /* === RESPONSIVE === */
+    @media(max-width:768px){
+        .main-header{flex-direction:column;text-align:center}
+        .nav-tabs{justify-content:center}
+        .header-stats{display:none}
+        .bib-sidebar{position:relative;top:0;max-height:300px}
+        .nav-tab{padding:8px 12px;font-size:.8rem}
+        .nav-tab span:not(.nav-tab-icon){display:none}
+    }
+    
+    /* === LIVES DISPLAY === */
+    .lives{display:flex;gap:3px;align-items:center}
+    .life{font-size:1.2rem;transition:all .3s}.life.lost{opacity:.2;transform:scale(.8)}
+    .streak-display{display:flex;align-items:center;gap:8px}
+    .streak-fire{font-size:1.3rem;animation:pulse 1s infinite}
+    .streak-num{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--gold);font-weight:700}
+    
+    /* === VERSION BADGE === */
+    .version-badge{position:fixed;bottom:10px;right:10px;background:var(--gold);color:var(--bg);padding:5px 10px;border-radius:5px;font-family:'Orbitron',sans-serif;font-size:.7rem;font-weight:700;z-index:999}
+</style>
+```
+
+</head>
+<body>
+    <div class="version-badge">v2.0 · 300+ PREGUNTAS</div>
+
+```
+<!-- ========== HEADER PRINCIPAL ========== -->
+<header class="main-header">
+    <div class="logo">
+        <div class="logo-badge">🎖️</div>
+        <div>
+            <h1>PMM COMMAND CENTER</h1>
+            <p>Sistema Integral v2.0 · Plan Santo Grial 2026</p>
+        </div>
+    </div>
+    
+    <nav class="nav-tabs">
+        <div class="nav-tab active" onclick="showModule('biblioteca')">
+            <span class="nav-tab-icon">📚</span>
+            <span>Biblioteca</span>
+        </div>
+        <div class="nav-tab" onclick="showModule('tests')">
+            <span class="nav-tab-icon">⚡</span>
+            <span>Tests</span>
+        </div>
+        <div class="nav-tab" onclick="showModule('analytics')">
+            <span class="nav-tab-icon">📊</span>
+            <span>Analytics</span>
+        </div>
+        <div class="nav-tab" onclick="showModule('plan')">
+            <span class="nav-tab-icon">🎯</span>
+            <span>Plan</span>
+        </div>
+    </nav>
+    
+    <div class="header-stats">
+        <div class="h-stat">
+            <div class="h-stat-val" id="globalTests">0</div>
+            <div class="h-stat-lbl">Tests</div>
+        </div>
+        <div class="h-stat">
+            <div class="h-stat-val" id="globalAcc">0%</div>
+            <div class="h-stat-lbl">Precisión</div>
+        </div>
+        <div class="h-stat">
+            <div class="streak-display">
+                <span class="streak-fire">🔥</span>
+                <span class="streak-num" id="globalStreak">0</span>
+            </div>
+            <div class="h-stat-lbl">Racha</div>
+        </div>
+    </div>
+</header>
+
+<!-- ========== CONTENIDO PRINCIPAL ========== -->
+<main class="main-content">
+    
+    <!-- ========== MÓDULO: BIBLIOTECA ========== -->
+    <div class="module active" id="mod-biblioteca">
+        <div class="bib-grid">
+            <aside class="bib-sidebar">
+                <input type="text" class="bib-search" placeholder="🔍 Buscar contenido..." id="bibSearch" oninput="filterBib()">
+                
+                <div class="bib-nav-title">📜 Constitución Española</div>
+                <div class="bib-nav-item active" onclick="loadContent('ce-preliminar')">
+                    <span class="icon">📋</span>
+                    <div class="info"><div class="title">Título Preliminar</div><div class="sub">Arts. 1-9</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ce-titulo1')">
+                    <span class="icon">⚖️</span>
+                    <div class="info"><div class="title">Título I: Derechos</div><div class="sub">Arts. 10-55</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ce-titulo2')">
+                    <span class="icon">👑</span>
+                    <div class="info"><div class="title">Título II: La Corona</div><div class="sub">Arts. 56-65</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ce-titulo3')">
+                    <span class="icon">🏛️</span>
+                    <div class="info"><div class="title">Título III: Cortes</div><div class="sub">Arts. 66-96</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ce-titulo4')">
+                    <span class="icon">🏢</span>
+                    <div class="info"><div class="title">Título IV: Gobierno</div><div class="sub">Arts. 97-107</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ce-titulo6')">
+                    <span class="icon">⚖️</span>
+                    <div class="info"><div class="title">Título VI: P. Judicial</div><div class="sub">Arts. 117-127</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ce-titulo8')">
+                    <span class="icon">🗺️</span>
+                    <div class="info"><div class="title">Título VIII: Territorial</div><div class="sub">Arts. 137-158</div></div>
+                </div>
+                
+                <div class="bib-nav-title">📋 Decreto 210/2021</div>
+                <div class="bib-nav-item" onclick="loadContent('d210-estructura')">
+                    <span class="icon">🏛️</span>
+                    <div class="info"><div class="title">Estructura y Escalas</div><div class="sub">Títulos I-II</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('d210-seleccion')">
+                    <span class="icon">📝</span>
+                    <div class="info"><div class="title">Selección y Promoción</div><div class="sub">Títulos III-IV</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('d210-formacion')">
+                    <span class="icon">🎓</span>
+                    <div class="info"><div class="title">Formación</div><div class="sub">Título V</div></div>
+                </div>
+                
+                <div class="bib-nav-title">👮 Normativa Policial</div>
+                <div class="bib-nav-item" onclick="loadContent('lo-2-1986')">
+                    <span class="icon">🛡️</span>
+                    <div class="info"><div class="title">LO 2/1986 FCSE</div><div class="sub">Policías Locales</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ley-1-2018')">
+                    <span class="icon">📜</span>
+                    <div class="info"><div class="title">Ley 1/2018 CM</div><div class="sub">Coordinación PL</div></div>
+                </div>
+                
+                <div class="bib-nav-title">⚖️ Código Penal</div>
+                <div class="bib-nav-item" onclick="loadContent('cp-lesiones')">
+                    <span class="icon">🩹</span>
+                    <div class="info"><div class="title">Lesiones</div><div class="sub">Arts. 147-156</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('cp-patrimonio')">
+                    <span class="icon">💰</span>
+                    <div class="info"><div class="title">Patrimonio</div><div class="sub">Hurto/Robo/Estafa</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('cp-vial')">
+                    <span class="icon">🚗</span>
+                    <div class="info"><div class="title">Seguridad Vial</div><div class="sub">Arts. 379-385</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('cp-funcionarios')">
+                    <span class="icon">🏢</span>
+                    <div class="info"><div class="title">Delitos Funcionarios</div><div class="sub">Arts. 404-435</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('cp-drogas')">
+                    <span class="icon">💊</span>
+                    <div class="info"><div class="title">Salud Pública</div><div class="sub">Arts. 359-378</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('cp-atentado')">
+                    <span class="icon">🚨</span>
+                    <div class="info"><div class="title">Atentado/Resistencia</div><div class="sub">Arts. 550-556</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('cp-asociaciones')">
+                    <span class="icon">👥</span>
+                    <div class="info"><div class="title">Asoc. Ilícitas</div><div class="sub">Arts. 515-520</div></div>
+                </div>
+                
+                <div class="bib-nav-title">🚗 Tráfico</div>
+                <div class="bib-nav-item" onclick="loadContent('trafico-general')">
+                    <span class="icon">🛣️</span>
+                    <div class="info"><div class="title">TRLTSV</div><div class="sub">Ley de Tráfico</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('trafico-rgc')">
+                    <span class="icon">🚦</span>
+                    <div class="info"><div class="title">RGC</div><div class="sub">Circulación</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('trafico-alcohol')">
+                    <span class="icon">🍺</span>
+                    <div class="info"><div class="title">Alcohol y Drogas</div><div class="sub">Procedimientos</div></div>
+                </div>
+                
+                <div class="bib-nav-title">📋 Proc. Administrativo</div>
+                <div class="bib-nav-item" onclick="loadContent('ley-39-2015')">
+                    <span class="icon">📄</span>
+                    <div class="info"><div class="title">Ley 39/2015</div><div class="sub">LPAC</div></div>
+                </div>
+                <div class="bib-nav-item" onclick="loadContent('ley-40-2015')">
+                    <span class="icon">🏛️</span>
+                    <div class="info"><div class="title">Ley 40/2015</div><div class="sub">LRJSP</div></div>
+                </div>
+            </aside>
+            
+            <div class="bib-content">
+                <div id="bibArticle" class="bib-article">
+                    <!-- Contenido dinámico -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== MÓDULO: TESTS ========== -->
+    <div class="module" id="mod-tests">
+        <!-- Menú de modos -->
+        <div id="testMenu">
+            <div class="card">
+                <div class="card-title">⚡ SELECCIONA MODO DE COMBATE</div>
+                <div class="test-menu">
+                    <div class="test-mode-card" onclick="selectMode('combate')">
+                        <div class="icon">⚔️</div>
+                        <div class="name">MODO COMBATE</div>
+                        <div class="desc">3 vidas · Tests infinitos</div>
+                    </div>
+                    <div class="test-mode-card" onclick="selectMode('neural')">
+                        <div class="icon">🧠</div>
+                        <div class="name">DESCARGA NEURAL</div>
+                        <div class="desc">50 preguntas sin parar</div>
+                    </div>
+                    <div class="test-mode-card" onclick="selectMode('simulacro')">
+                        <div class="icon">🎯</div>
+                        <div class="name">SIMULACRO</div>
+                        <div class="desc">100 preguntas · 90 min</div>
+                    </div>
+                    <div class="test-mode-card" onclick="selectMode('zen')">
+                        <div class="icon">🧘</div>
+                        <div class="name">MODO ZEN</div>
+                        <div class="desc">Sin presión · Aprende</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" id="temaSelector" style="display:none">
+                <div class="card-title">📚 SELECCIONA MATERIA</div>
+                <div class="test-tema-grid">
+                    <div class="test-tema-btn" onclick="selectTema('todos')"><div class="icon">🌐</div><div class="name">TODOS</div></div>
+                    <div class="test-tema-btn" onclick="selectTema('constitucion')"><div class="icon">📜</div><div class="name">CE</div></div>
+                    <div class="test-tema-btn" onclick="selectTema('decreto')"><div class="icon">📋</div><div class="name">D.210</div></div>
+                    <div class="test-tema-btn" onclick="selectTema('penal')"><div class="icon">⚖️</div><div class="name">C.PENAL</div></div>
+                    <div class="test-tema-btn" onclick="selectTema('trafico')"><div class="icon">🚗</div><div class="name">TRÁFICO</div></div>
+                    <div class="test-tema-btn" onclick="selectTema('administrativo')"><div class="icon">📄</div><div class="name">ADMIN</div></div>
+                    <div class="test-tema-btn" onclick="selectTema('policial')"><div class="icon">👮</div><div class="name">POLICIAL</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Área de test activo -->
+        <div class="test-area" id="testArea">
+            <div class="test-header">
+                <div style="display:flex;gap:15px;align-items:center">
+                    <span class="test-badge" id="testBadge">TEMA</span>
+                    <span id="testCount" style="color:var(--text2)">Pregunta 1</span>
+                    <div class="lives" id="livesDisplay"></div>
+                </div>
+                <div class="test-timer" id="testTimer">00:00</div>
+            </div>
+            
+            <div class="test-progress"><div class="test-progress-fill" id="testProgressFill" style="width:0%"></div></div>
+            
+            <div class="question-card">
+                <span class="q-number" id="qNumber">Q1</span>
+                <p class="q-text" id="qText">Cargando pregunta...</p>
+            </div>
+            
+            <div class="options" id="optionsContainer"></div>
+            
+            <div class="feedback" id="feedbackBox">
+                <div class="feedback-title" id="feedbackTitle">Correcto</div>
+                <p class="feedback-exp" id="feedbackExp"></p>
+                <div class="feedback-art" id="feedbackArt"></div>
+            </div>
+            
+            <div class="test-btns">
+                <button class="btn btn-gold" id="nextBtn" onclick="nextQuestion()" style="display:none">SIGUIENTE →</button>
+                <button class="btn btn-red" onclick="endTest()">✕ TERMINAR</button>
+            </div>
+        </div>
+        
+        <!-- Resultados -->
+        <div class="test-results" id="testResults">
+            <div class="results-icon" id="resultsIcon">🏆</div>
+            <h2 class="results-title" id="resultsTitle">¡COMPLETADO!</h2>
+            <p style="color:var(--text2)" id="resultsSub">Resultados del combate</p>
+            <div class="results-stats">
+                <div class="r-stat"><div class="r-stat-val" id="resCor">0</div><div class="r-stat-lbl">Correctas</div></div>
+                <div class="r-stat"><div class="r-stat-val" id="resInc">0</div><div class="r-stat-lbl">Incorrectas</div></div>
+                <div class="r-stat"><div class="r-stat-val" id="resAcc">0%</div><div class="r-stat-lbl">Precisión</div></div>
+                <div class="r-stat"><div class="r-stat-val" id="resStreak">0</div><div class="r-stat-lbl">Mejor Racha</div></div>
+                <div class="r-stat"><div class="r-stat-val" id="resTime">00:00</div><div class="r-stat-lbl">Tiempo</div></div>
+            </div>
+            <div class="test-btns" style="justify-content:center">
+                <button class="btn btn-gold" onclick="restartTest()">🔄 REPETIR</button>
+                <button class="btn btn-outline" onclick="backToMenu()">🏠 MENÚ</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== MÓDULO: ANALYTICS ========== -->
+    <div class="module" id="mod-analytics">
+        <div class="analytics-grid">
+            <div class="card">
+                <div class="card-title">📈 PREDICCIÓN APROBADO</div>
+                <div class="stat-big">
+                    <div class="stat-big-val" id="predictionPct">0%</div>
+                    <div class="stat-big-lbl">Precisión Media Global</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">📚 RENDIMIENTO POR MATERIA</div>
+                <div id="subjectsAnalytics">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">🔥 ESTADÍSTICAS GLOBALES</div>
+                <div class="analytics-grid" style="gap:10px">
+                    <div class="r-stat"><div class="r-stat-val" id="anTotalTests">0</div><div class="r-stat-lbl">Tests Totales</div></div>
+                    <div class="r-stat"><div class="r-stat-val" id="anTotalQ">0</div><div class="r-stat-lbl">Preguntas</div></div>
+                    <div class="r-stat"><div class="r-stat-val" id="anBestStreak">0</div><div class="r-stat-lbl">Mejor Racha</div></div>
+                    <div class="r-stat"><div class="r-stat-val" id="anStudyDays">0</div><div class="r-stat-lbl">Días Estudio</div></div>
+                </div>
+            </div>
+            
+            <div class="card" style="grid-column:1/-1">
+                <div class="card-title">💡 RECOMENDACIONES DEL SISTEMA</div>
+                <div id="recommendations" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== MÓDULO: PLAN ========== -->
+    <div class="module" id="mod-plan">
+        <div class="card">
+            <div class="plan-header">
+                <h2 class="plan-title">🎯 PLAN SANTO GRIAL 2026</h2>
+                <p class="plan-lema">⚔️ 30 MIN/DÍA = PLAZA SEGURA ⚔️</p>
+            </div>
+            
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;flex-wrap:wrap;gap:10px">
+                <span style="background:var(--gold);color:var(--bg);padding:8px 20px;border-radius:25px;font-family:'Orbitron',sans-serif;font-weight:700" id="weekBadge">SEMANA 1</span>
+                <span style="color:var(--text2)" id="weekTarget">🎯 Target: 70%</span>
+            </div>
+            
+            <div class="week-progress">
+                <div class="week-progress-fill" id="weekProgressFill" style="width:0%">
+                    <span class="week-pct" id="weekPct">0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">📅 PLANIFICACIÓN SEMANAL</div>
+            <div style="overflow-x:auto">
+                <table class="schedule-table">
+                    <thead>
+                        <tr><th>DÍA</th><th>TAREAS (30 min)</th><th>✓</th></tr>
+                    </thead>
+                    <tbody id="scheduleBody">
+                        <!-- Dinámico -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="motivation-box">
+            <p class="motivation-quote" id="motivationQuote">"El dolor de la disciplina pesa gramos, el del arrepentimiento pesa toneladas."</p>
+            <p class="motivation-author" id="motivationAuthor">— Jim Rohn</p>
+            <button class="btn btn-gold" style="margin-top:15px" onclick="newQuote()">🔄 NUEVA FRASE</button>
+        </div>
+    </div>
+</main>
+```
+
+<script>
+// ==================== DATOS GLOBALES ====================
+const DB = {
+    stats: { tests: 0, correct: 0, incorrect: 0, streak: 0, bestStreak: 0, studyDays: 0 },
+    subjects: {
+        constitucion: { name: 'Constitución', icon: '📜', correct: 0, total: 0, color: '#6366f1' },
+        decreto: { name: 'Decreto 210', icon: '📋', correct: 0, total: 0, color: '#22d3ee' },
+        penal: { name: 'Código Penal', icon: '⚖️', correct: 0, total: 0, color: '#ec4899' },
+        trafico: { name: 'Tráfico', icon: '🚗', correct: 0, total: 0, color: '#f59e0b' },
+        administrativo: { name: 'Administrativo', icon: '📄', correct: 0, total: 0, color: '#8b5cf6' },
+        policial: { name: 'Policial', icon: '👮', correct: 0, total: 0, color: '#06b6d4' }
+    },
+    plan: { week: 1, weekPct: 0, days: { lun:false, mar:false, mie:false, jue:false, vie:false, sab:false, dom:false } }
+};
+
+// ==================== BANCO DE PREGUNTAS EXPANDIDO (~300 PREGUNTAS) ====================
+const QUESTIONS = {
+// ===== CONSTITUCIÓN ESPAÑOLA (65 PREGUNTAS) =====
+constitucion: [
+    // TÍTULO PRELIMINAR (15)
+    {q:"Según art. 1.1 CE, ¿cuáles son los valores superiores del ordenamiento jurídico?",o:["Libertad, justicia, igualdad, pluralismo político","Libertad, solidaridad, igualdad, pluralismo","Libertad, justicia, fraternidad, democracia","Democracia, justicia, igualdad, libertad"],c:0,e:"Art. 1.1 CE establece los 4 valores superiores: libertad, justicia, igualdad y pluralismo político. MEMORIZA: L-J-I-P",a:"Art. 1.1 CE"},
+    {q:"La soberanía nacional reside en:",o:["El Rey","Las Cortes Generales","El pueblo español","El Gobierno"],c:2,e:"Art. 1.2 CE: 'La soberanía nacional reside en el pueblo español, del que emanan los poderes del Estado.'",a:"Art. 1.2 CE"},
+    {q:"La forma política del Estado español es:",o:["República parlamentaria","Monarquía constitucional","Monarquía parlamentaria","República federal"],c:2,e:"Art. 1.3 CE establece que la forma política es la Monarquía parlamentaria.",a:"Art. 1.3 CE"},
+    {q:"La capital del Estado es:",o:["La ciudad de Madrid","Madrid","La villa de Madrid","No lo establece la CE"],c:2,e:"Art. 5 CE: 'La capital del Estado es la villa de Madrid.' OJO: es 'villa', no 'ciudad'.",a:"Art. 5 CE"},
+    {q:"La bandera de España tiene la franja amarilla de:",o:["Igual anchura que las rojas","Doble anchura que cada roja","Triple anchura","Mitad de anchura"],c:1,e:"Art. 4.1 CE: franja amarilla de doble anchura que cada una de las rojas.",a:"Art. 4.1 CE"},
+    {q:"La CE se fundamenta en:",o:["La soberanía nacional","Los valores superiores","La indisoluble unidad de la Nación española","La monarquía parlamentaria"],c:2,e:"Art. 2 CE: se fundamenta en la indisoluble unidad de la Nación española. TRAMPA: NO es soberanía ni valores.",a:"Art. 2 CE"},
+    {q:"El castellano es la lengua oficial del Estado. Los españoles tienen:",o:["Solo el derecho a usarlo","Solo el deber de conocerlo","El deber de conocerlo y el derecho a usarlo","Ni deber ni derecho específico"],c:2,e:"Art. 3.1 CE: deber de conocerlo y derecho a usarlo.",a:"Art. 3.1 CE"},
+    {q:"Las FFAA tienen como misión:",o:["Garantizar la soberanía, defender integridad territorial y ordenamiento constitucional","Solo defender el territorio","Mantener el orden público","Proteger al Rey"],c:0,e:"Art. 8 CE: soberanía e independencia, integridad territorial y ordenamiento constitucional.",a:"Art. 8 CE"},
+    {q:"La CE garantiza el principio de legalidad y la:",o:["Publicidad de las normas","Retroactividad penal","Irresponsabilidad judicial","Arbitrariedad administrativa"],c:0,e:"Art. 9.3 CE: legalidad, jerarquía normativa, publicidad de las normas...",a:"Art. 9.3 CE"},
+    {q:"La CE fue ratificada en referéndum el:",o:["31 octubre 1978","6 diciembre 1978","27 diciembre 1978","29 diciembre 1978"],c:1,e:"El 6 de diciembre de 1978 se ratificó en referéndum.",a:"Cronología CE"},
+    {q:"La CE entró en vigor el:",o:["6 diciembre 1978","27 diciembre 1978","29 diciembre 1978","1 enero 1979"],c:2,e:"Entró en vigor el 29 de diciembre de 1978, con su publicación en BOE.",a:"Disposición Final CE"},
+    {q:"¿Cuántos artículos tiene la Constitución Española?",o:["155","165","169","175"],c:2,e:"La CE tiene 169 artículos distribuidos en 10 Títulos más el Preliminar.",a:"Estructura CE"},
+    {q:"¿Cuántos Títulos tiene la CE?",o:["9 + Preliminar","10 + Preliminar","11 + Preliminar","8 + Preliminar"],c:1,e:"La CE tiene un Título Preliminar + 10 Títulos numerados.",a:"Estructura CE"},
+    {q:"Los sindicatos de trabajadores y asociaciones empresariales contribuyen a:",o:["La defensa de intereses económicos","La defensa y promoción de intereses económicos y sociales","Solo la negociación colectiva","El control del Gobierno"],c:1,e:"Art. 7 CE: defensa y promoción de los intereses económicos y sociales que les son propios.",a:"Art. 7 CE"},
+    {q:"Los partidos políticos expresan el:",o:["Interés general","Pluralismo político","Interés económico","Orden público"],c:1,e:"Art. 6 CE: Los partidos políticos expresan el pluralismo político.",a:"Art. 6 CE"},
+    
+    // TÍTULO I - DERECHOS (20)
+    {q:"Los españoles son mayores de edad a los:",o:["16 años","18 años","21 años","Según determine cada CCAA"],c:1,e:"Art. 12 CE: 'Los españoles son mayores de edad a los dieciocho años.'",a:"Art. 12 CE"},
+    {q:"El plazo máximo de detención preventiva es de:",o:["24 horas","48 horas","72 horas","96 horas"],c:2,e:"Art. 17.2 CE: máximo 72 horas, pasando a disposición judicial.",a:"Art. 17.2 CE"},
+    {q:"Para la entrada en domicilio se requiere:",o:["Solo consentimiento del titular","Solo resolución judicial","Consentimiento, resolución judicial o flagrante delito","Autorización administrativa"],c:2,e:"Art. 18.2 CE: tres supuestos para entrada en domicilio.",a:"Art. 18.2 CE"},
+    {q:"El derecho de reunión pacífica y sin armas:",o:["Requiere autorización previa","No necesita autorización previa","Solo en lugares cerrados","Requiere permiso policial"],c:1,e:"Art. 21.1 CE: no necesita autorización previa. En lugares públicos: comunicación previa.",a:"Art. 21.1 CE"},
+    {q:"Las penas privativas de libertad se orientan hacia:",o:["El castigo ejemplar","La reeducación y reinserción social","La prevención general","La protección de la sociedad"],c:1,e:"Art. 25.2 CE: orientación hacia reeducación y reinserción social.",a:"Art. 25.2 CE"},
+    {q:"La Administración civil puede imponer sanciones que impliquen:",o:["Privación de libertad","Multas coercitivas","Ambas cosas","Ninguna de las anteriores"],c:1,e:"Art. 25.3 CE: La Administración civil NO puede imponer sanciones que impliquen privación de libertad.",a:"Art. 25.3 CE"},
+    {q:"El derecho a la tutela judicial efectiva está en el artículo:",o:["23","24","25","26"],c:1,e:"Art. 24 CE: Tutela judicial efectiva de jueces y tribunales sin indefensión.",a:"Art. 24 CE"},
+    {q:"El derecho a la vida está reconocido en el artículo:",o:["14","15","16","17"],c:1,e:"Art. 15 CE: Todos tienen derecho a la vida y a la integridad física y moral.",a:"Art. 15 CE"},
+    {q:"Queda abolida:",o:["La cadena perpetua","La pena de muerte","Las penas infamantes","Todas las anteriores"],c:1,e:"Art. 15 CE: Queda abolida la pena de muerte, salvo lo que dispongan las leyes penales militares para tiempos de guerra.",a:"Art. 15 CE"},
+    {q:"La libertad ideológica y religiosa está garantizada en el artículo:",o:["14","15","16","17"],c:2,e:"Art. 16 CE: Se garantiza la libertad ideológica, religiosa y de culto.",a:"Art. 16 CE"},
+    {q:"El secreto de las comunicaciones está protegido por:",o:["Art. 18.2","Art. 18.3","Art. 18.4","Art. 19"],c:1,e:"Art. 18.3 CE: secreto de las comunicaciones, especialmente postales, telegráficas y telefónicas.",a:"Art. 18.3 CE"},
+    {q:"El derecho de asociación está en el artículo:",o:["21","22","23","24"],c:1,e:"Art. 22 CE: Se reconoce el derecho de asociación.",a:"Art. 22 CE"},
+    {q:"Las asociaciones que persigan fines delictivos son:",o:["Limitadas","Suspendidas","Ilegales","Intervenidas"],c:2,e:"Art. 22.2 CE: Las asociaciones que persigan fines o utilicen medios tipificados como delito son ilegales.",a:"Art. 22.2 CE"},
+    {q:"El derecho de petición se ejerce:",o:["Individualmente","Colectivamente","Individual y colectivamente","Solo por escrito"],c:2,e:"Art. 29 CE: Todos los españoles tendrán el derecho de petición individual y colectiva.",a:"Art. 29 CE"},
+    {q:"Los españoles tienen el derecho y el deber de:",o:["Trabajar","Defender a España","Pagar impuestos","Todas son correctas"],c:3,e:"Art. 30 (defender España), Art. 35 (trabajar), Art. 31 (contribuir).",a:"Arts. 30, 31, 35 CE"},
+    {q:"El derecho a contraer matrimonio está en el artículo:",o:["30","31","32","33"],c:2,e:"Art. 32 CE: El hombre y la mujer tienen derecho a contraer matrimonio con plena igualdad jurídica.",a:"Art. 32 CE"},
+    {q:"Se reconoce el derecho a la propiedad privada en el artículo:",o:["31","32","33","34"],c:2,e:"Art. 33 CE: Se reconoce el derecho a la propiedad privada y a la herencia.",a:"Art. 33 CE"},
+    {q:"Los derechos del Capítulo II, Sección 1ª se protegen mediante:",o:["Recurso de amparo","Recurso contencioso","Queja al Defensor","Todas"],c:0,e:"Art. 53.2 CE: Recurso de amparo ante el TC para arts. 14-29 y 30.2.",a:"Art. 53.2 CE"},
+    {q:"El Defensor del Pueblo es designado por:",o:["El Gobierno","Las Cortes Generales","El Rey","El Consejo de Estado"],c:1,e:"Art. 54 CE: Una ley orgánica regulará la institución del Defensor del Pueblo, designado por las Cortes Generales.",a:"Art. 54 CE"},
+    {q:"Los estados de alarma, excepción y sitio se regulan en:",o:["Art. 55","Art. 116","Art. 117","Art. 155"],c:1,e:"Art. 116 CE regula los tres estados (alarma, excepción, sitio).",a:"Art. 116 CE"},
+    
+    // TÍTULO II - LA CORONA (5)
+    {q:"El Rey es el Jefe del Estado según el artículo:",o:["54","55","56","57"],c:2,e:"Art. 56 CE: El Rey es el Jefe del Estado, símbolo de su unidad y permanencia.",a:"Art. 56 CE"},
+    {q:"La persona del Rey es:",o:["Responsable","Inviolable y no sujeta a responsabilidad","Sujeta a control parlamentario","Enjuiciable penalmente"],c:1,e:"Art. 56.3 CE: La persona del Rey es inviolable y no está sujeta a responsabilidad.",a:"Art. 56.3 CE"},
+    {q:"Los actos del Rey serán refrendados por:",o:["El Congreso","El Senado","El Presidente del Gobierno o Ministros","El Consejo de Estado"],c:2,e:"Art. 64 CE: Los actos del Rey serán refrendados por el Presidente del Gobierno y, en su caso, por los Ministros competentes.",a:"Art. 64 CE"},
+    {q:"El Rey tiene el mando supremo de:",o:["Las Cortes","Las Fuerzas Armadas","El Poder Judicial","La Administración"],c:1,e:"Art. 62.h CE: Corresponde al Rey el mando supremo de las Fuerzas Armadas.",a:"Art. 62.h CE"},
+    {q:"En la sucesión al trono, en el mismo grado, se prefiere:",o:["La mujer al varón","El varón a la mujer","El mayor al menor","El menor al mayor"],c:1,e:"Art. 57.1 CE: En el mismo grado, el varón a la mujer. (Pendiente de reforma)",a:"Art. 57.1 CE"},
+    
+    // TÍTULO III - CORTES GENERALES (10)
+    {q:"Las Cortes Generales representan al:",o:["Rey","Gobierno","Pueblo español","Estado"],c:2,e:"Art. 66.1 CE: Las Cortes Generales representan al pueblo español.",a:"Art. 66.1 CE"},
+    {q:"Las Cortes Generales están formadas por:",o:["El Congreso","El Senado","El Congreso y el Senado","El Congreso, Senado y Tribunal Constitucional"],c:2,e:"Art. 66.1 CE: Las Cortes Generales están formadas por el Congreso de los Diputados y el Senado.",a:"Art. 66.1 CE"},
+    {q:"El Congreso tiene un mínimo de diputados de:",o:["300","350","400","Sin mínimo"],c:0,e:"Art. 68.1 CE: El Congreso se compone de un mínimo de 300 y un máximo de 400 Diputados.",a:"Art. 68.1 CE"},
+    {q:"El Congreso tiene un máximo de diputados de:",o:["300","350","400","450"],c:2,e:"Art. 68.1 CE: El Congreso se compone de un mínimo de 300 y un máximo de 400 Diputados.",a:"Art. 68.1 CE"},
+    {q:"El Senado es la Cámara de:",o:["Representación popular","Representación territorial","Control del Gobierno","Iniciativa legislativa"],c:1,e:"Art. 69.1 CE: El Senado es la Cámara de representación territorial.",a:"Art. 69.1 CE"},
+    {q:"Los miembros de las Cortes Generales no están ligados por:",o:["La Constitución","Las leyes","Mandato imperativo","El reglamento"],c:2,e:"Art. 67.2 CE: Los miembros de las Cortes Generales no estarán ligados por mandato imperativo.",a:"Art. 67.2 CE"},
+    {q:"La circunscripción electoral para el Congreso es:",o:["La Comunidad Autónoma","El municipio","La provincia","El distrito"],c:2,e:"Art. 68.2 CE: La circunscripción electoral es la provincia.",a:"Art. 68.2 CE"},
+    {q:"Los parlamentarios gozan de inviolabilidad por:",o:["Todos sus actos","Sus opiniones en ejercicio de funciones","Sus delitos","Su patrimonio"],c:1,e:"Art. 71.1 CE: Inviolabilidad por las opiniones manifestadas en el ejercicio de sus funciones.",a:"Art. 71.1 CE"},
+    {q:"La inmunidad parlamentaria significa que:",o:["No pueden ser detenidos nunca","Solo pueden ser detenidos en flagrante delito","No pueden ser juzgados","Son irresponsables"],c:1,e:"Art. 71.2 CE: Solo podrán ser detenidos en caso de flagrante delito.",a:"Art. 71.2 CE"},
+    {q:"Las Cortes se reúnen en sesiones ordinarias:",o:["Todo el año","De septiembre a diciembre y de febrero a junio","Solo cuando las convoca el Rey","Cuando lo decide el Gobierno"],c:1,e:"Art. 73.1 CE: De septiembre a diciembre y de febrero a junio.",a:"Art. 73.1 CE"},
+    
+    // TÍTULO IV - GOBIERNO (5)
+    {q:"El Gobierno se compone de:",o:["Presidente y Ministros","Presidente, Vicepresidentes y Ministros","Presidente, Vicepresidentes, Ministros y demás miembros según ley","Solo Presidente"],c:2,e:"Art. 98.1 CE: Presidente, Vicepresidentes en su caso, Ministros y demás miembros que establezca la ley.",a:"Art. 98.1 CE"},
+    {q:"El Gobierno dirige la política:",o:["Exterior","Interior","Interior y exterior","Solo económica"],c:2,e:"Art. 97 CE: El Gobierno dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado.",a:"Art. 97 CE"},
+    {q:"El candidato a Presidente del Gobierno es propuesto por:",o:["El Congreso","El Senado","El Rey","El Gobierno saliente"],c:2,e:"Art. 99.1 CE: El Rey propone un candidato a la Presidencia del Gobierno.",a:"Art. 99.1 CE"},
+    {q:"La moción de censura debe ser propuesta al menos por:",o:["La décima parte del Congreso","Un quinto del Congreso","La mayoría absoluta","Un tercio del Congreso"],c:0,e:"Art. 113.2 CE: La moción de censura deberá ser propuesta al menos por la décima parte de los Diputados.",a:"Art. 113.2 CE"},
+    {q:"La cuestión de confianza la plantea:",o:["El Congreso","El Senado","El Presidente del Gobierno","El Rey"],c:2,e:"Art. 112 CE: El Presidente del Gobierno puede plantear ante el Congreso la cuestión de confianza.",a:"Art. 112 CE"},
+    
+    // TÍTULO VI - PODER JUDICIAL (5)
+    {q:"La justicia emana del:",o:["Rey","Gobierno","Pueblo","Poder Judicial"],c:2,e:"Art. 117.1 CE: La justicia emana del pueblo.",a:"Art. 117.1 CE"},
+    {q:"Los Jueces y Magistrados son:",o:["Dependientes del Gobierno","Independientes, inamovibles, responsables y sometidos solo a la ley","Nombrados por las Cortes","Elegidos por el pueblo"],c:1,e:"Art. 117.1 CE: independientes, inamovibles, responsables y sometidos únicamente al imperio de la ley.",a:"Art. 117.1 CE"},
+    {q:"El órgano de gobierno del Poder Judicial es:",o:["El Tribunal Supremo","El Tribunal Constitucional","El Consejo General del Poder Judicial","El Ministerio de Justicia"],c:2,e:"Art. 122.2 CE: El CGPJ es el órgano de gobierno del Poder Judicial.",a:"Art. 122.2 CE"},
+    {q:"El Tribunal Supremo tiene jurisdicción:",o:["Solo penal","Solo civil","En todo el territorio nacional","Solo en Madrid"],c:2,e:"Art. 123.1 CE: El Tribunal Supremo, con jurisdicción en toda España.",a:"Art. 123.1 CE"},
+    {q:"El Ministerio Fiscal tiene por misión:",o:["Defender al Estado","Promover la acción de la justicia en defensa de la legalidad","Asesorar al Gobierno","Controlar a los jueces"],c:1,e:"Art. 124.1 CE: promover la acción de la justicia en defensa de la legalidad, derechos de los ciudadanos e interés público.",a:"Art. 124.1 CE"},
+    
+    // TÍTULO VIII - ORGANIZACIÓN TERRITORIAL (5)
+    {q:"El Estado se organiza territorialmente en:",o:["Municipios y provincias","Municipios, provincias y CCAA","Solo CCAA","Regiones y municipios"],c:1,e:"Art. 137 CE: El Estado se organiza territorialmente en municipios, en provincias y en las CCAA.",a:"Art. 137 CE"},
+    {q:"La provincia es una entidad local con personalidad jurídica propia, determinada por:",o:["La agrupación de municipios","La tradición histórica","El Gobierno","Las Cortes"],c:0,e:"Art. 141.1 CE: La provincia es una entidad local con personalidad jurídica propia, determinada por la agrupación de municipios.",a:"Art. 141.1 CE"},
+    {q:"El gobierno y administración de los municipios corresponde a:",o:["El Alcalde","Los Ayuntamientos","El Pleno municipal","La Junta de Gobierno"],c:1,e:"Art. 140 CE: El gobierno y administración de los municipios corresponde a sus respectivos Ayuntamientos.",a:"Art. 140 CE"},
+    {q:"Para la creación de una CCAA se requiere proyecto de Estatuto elaborado por:",o:["El Gobierno","Las Cortes","Una Asamblea compuesta por miembros de las Diputaciones y Diputados/Senadores","El Rey"],c:2,e:"Art. 146 CE: Asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas y por los Diputados y Senadores elegidos en ellas.",a:"Art. 146 CE"},
+    {q:"El artículo 155 CE permite al Gobierno:",o:["Suspender la autonomía","Adoptar medidas para obligar al cumplimiento de obligaciones constitucionales","Disolver el Parlamento autonómico","Nombrar al Presidente autonómico"],c:1,e:"Art. 155 CE: Si una CCAA no cumpliere las obligaciones o atentare gravemente al interés general, el Gobierno puede adoptar las medidas necesarias.",a:"Art. 155 CE"}
+],
+
+// ===== DECRETO 210/2021 (35 PREGUNTAS) =====
+decreto: [
+    {q:"El Decreto 210/2021 desarrolla la Ley:",o:["Ley 4/1992","Ley 1/2018 de Coordinación de Policías Locales","Ley Orgánica 2/1986","Ley 7/1985"],c:1,e:"Desarrolla la Ley 1/2018, de 22 de febrero, de Coordinación de Policías Locales de la CM.",a:"Preámbulo D.210/2021"},
+    {q:"El número mínimo de efectivos para un Cuerpo de Policía Local es:",o:["3 efectivos","5 efectivos","10 efectivos","15 efectivos"],c:1,e:"Art. 13.1: El número mínimo de efectivos es 5.",a:"Art. 13 D.210/2021"},
+    {q:"La Escala Técnica corresponde al subgrupo:",o:["A1","A2","C1","C2"],c:0,e:"Art. 11.2.a): Escala Técnica = subgrupo A1 (Comisario Principal, Comisario, Intendente).",a:"Art. 11 D.210/2021"},
+    {q:"La Escala Ejecutiva corresponde al subgrupo:",o:["A1","A2","C1","C2"],c:1,e:"Art. 11.2.b): Escala Ejecutiva = subgrupo A2 (Inspector, Subinspector).",a:"Art. 11 D.210/2021"},
+    {q:"La Escala Básica corresponde al subgrupo:",o:["A1","A2","C1","C2"],c:2,e:"Art. 11.2.c): Escala Básica = subgrupo C1 (Oficial, Policía).",a:"Art. 11 D.210/2021"},
+    {q:"La categoría de Comisario Principal es obligatoria en municipios que superen:",o:["150.000 habitantes","200.000 habitantes","300.000 habitantes","500.000 habitantes"],c:2,e:"Art. 15.1.a): obligatoria en municipios >300.000 hab o >300 efectivos.",a:"Art. 15 D.210/2021"},
+    {q:"La categoría de Comisario es obligatoria en municipios que superen:",o:["100.000 habitantes","150.000 habitantes","200.000 habitantes","250.000 habitantes"],c:1,e:"Art. 15.1.b): obligatoria en municipios >150.000 hab o >175 efectivos.",a:"Art. 15 D.210/2021"},
+    {q:"La categoría de Intendente es obligatoria en municipios que superen:",o:["50.000 habitantes","80.000 habitantes","100.000 habitantes","120.000 habitantes"],c:1,e:"Art. 15.1.c): obligatoria en municipios >80.000 hab o de gran población.",a:"Art. 15 D.210/2021"},
+    {q:"La categoría de Inspector es obligatoria en municipios que superen:",o:["25.000 habitantes","35.000 habitantes","50.000 habitantes","75.000 habitantes"],c:1,e:"Art. 15.1.d): obligatoria en municipios >35.000 hab o >50 efectivos.",a:"Art. 15 D.210/2021"},
+    {q:"La categoría de Subinspector es obligatoria con más de:",o:["10 efectivos","15 efectivos","20 efectivos","25 efectivos"],c:1,e:"Art. 15.1.e): obligatoria con >15 efectivos.",a:"Art. 15 D.210/2021"},
+    {q:"La antigüedad mínima para promoción interna es de:",o:["1 año","2 años","3 años","5 años"],c:1,e:"Art. 54.1.c): al menos 2 años de servicio activo en categoría inmediata inferior.",a:"Art. 54 D.210/2021"},
+    {q:"Para promoción a Comisario/Intendente si acceso fue libre, la antigüedad mínima es:",o:["2 años","4 años","6 años","8 años"],c:2,e:"Art. 54.1.c): 6 años si accedieron por acceso libre a categorías inmediatas inferiores.",a:"Art. 54 D.210/2021"},
+    {q:"El curso selectivo de formación básica para ingreso tiene una duración mínima de:",o:["300 horas","500 horas","625 horas","800 horas"],c:2,e:"Art. 76.2: duración no inferior a 625 horas o equivalente en créditos ECTS.",a:"Art. 76 D.210/2021"},
+    {q:"El curso selectivo para promoción interna tiene una carga de:",o:["200 horas","300 horas","400 horas","500 horas"],c:1,e:"Art. 77.3: carga lectiva de 300 horas o equivalente en créditos ECTS.",a:"Art. 77 D.210/2021"},
+    {q:"La permanencia mínima tras movilidad en el nuevo ayuntamiento es de:",o:["2 años","3 años","5 años","7 años"],c:2,e:"Art. 64.1.c): permanencia mínima de 5 años.",a:"Art. 64 D.210/2021"},
+    {q:"El porcentaje reservado para movilidad en categoría Policía es:",o:["10%","15%","20%","25%"],c:2,e:"Art. 64.1.a): deberá reservarse un 20% de las plazas.",a:"Art. 64 D.210/2021"},
+    {q:"El régimen disciplinario de Policías Locales se rige por:",o:["Ley 30/1992","LO 4/2010 del Régimen disciplinario del CNP","EBEP exclusivamente","Normativa municipal"],c:1,e:"Art. 98.1: se aplica la LO 4/2010 del Régimen disciplinario del CNP.",a:"Art. 98 D.210/2021"},
+    {q:"La categoría de Oficial es obligatoria en:",o:["Municipios >5.000 hab","Municipios >10.000 hab","Municipios con plantilla policial","Todos los municipios"],c:2,e:"Art. 15.1.f): la categoría de Oficial es obligatoria en municipios con plantilla policial.",a:"Art. 15 D.210/2021"},
+    {q:"El Centro de Formación Integral de Seguridad tiene rango de:",o:["Dirección General","Subdirección General","Servicio","Sección"],c:1,e:"Art. 70.1: rango de subdirección general.",a:"Art. 70 D.210/2021"},
+    {q:"La unidad básica operativa del Cuerpo de Policía Local es:",o:["El agente individual","El binomio de efectivos","La patrulla","El grupo"],c:1,e:"Art. 13.2: La unidad básica operativa es el binomio de efectivos.",a:"Art. 13 D.210/2021"},
+    {q:"Por cada 4 Policías corresponde 1 Oficial en plantillas de:",o:["Menos de 20 efectivos","20 a 100 efectivos","Más de 100 efectivos","Todas las plantillas"],c:0,e:"Art. 14: ratio 4:1 para plantillas <20, 6:1 para 20-100, 8:1 para >100.",a:"Art. 14 D.210/2021"},
+    {q:"Por cada 3 Oficiales corresponde:",o:["1 Inspector","1 Subinspector","1 Intendente","1 Comisario"],c:1,e:"Art. 14: Por cada 3 Oficiales, 1 Subinspector.",a:"Art. 14 D.210/2021"},
+    {q:"La jefatura inmediata del Cuerpo recae en:",o:["El Alcalde","El Concejal de Seguridad","El funcionario de mayor categoría jerárquica","El Intendente"],c:2,e:"Art. 16: Recae en el funcionario de mayor categoría jerárquica del Cuerpo.",a:"Art. 16 D.210/2021"},
+    {q:"El Decreto 210/2021 es de aplicación directa en ayuntamientos:",o:["Con más de 5.000 habitantes","Sin reglamento propio","De la Comunidad de Madrid","Con Policía Local"],c:1,e:"Es de aplicación directa en ayuntamientos sin reglamento de organización propio.",a:"Art. 2 D.210/2021"},
+    {q:"Las categorías de la Escala Técnica son:",o:["Comisario Principal, Comisario, Intendente","Inspector, Subinspector","Oficial, Policía","Todas las anteriores"],c:0,e:"Art. 11.2.a): Escala Técnica (A1): Comisario Principal, Comisario, Intendente.",a:"Art. 11 D.210/2021"},
+    {q:"Las categorías de la Escala Ejecutiva son:",o:["Comisario Principal, Comisario","Inspector, Subinspector","Oficial, Policía","Intendente, Inspector"],c:1,e:"Art. 11.2.b): Escala Ejecutiva (A2): Inspector, Subinspector.",a:"Art. 11 D.210/2021"},
+    {q:"Las categorías de la Escala Básica son:",o:["Inspector, Subinspector","Oficial, Policía","Policía únicamente","Oficial, Policía, Auxiliar"],c:1,e:"Art. 11.2.c): Escala Básica (C1): Oficial, Policía.",a:"Art. 11 D.210/2021"},
+    {q:"El proceso selectivo de promoción consta de:",o:["Solo oposición","Oposición y concurso","Oposición, concurso y curso selectivo","Concurso de méritos"],c:2,e:"Art. 53: Fases sucesivas: Oposición + Concurso + Curso selectivo.",a:"Art. 53 D.210/2021"},
+    {q:"Para promoción interna NO se puede estar en:",o:["Servicio activo","Segunda actividad (salvo embarazo)","Excedencia voluntaria","Servicios especiales"],c:1,e:"Art. 54.1.b): No estar en segunda actividad, salvo que sea por embarazo.",a:"Art. 54 D.210/2021"},
+    {q:"La calificación mínima en cada asignatura del curso selectivo es:",o:["4 puntos","5 puntos","6 puntos","7 puntos"],c:1,e:"Art. 61.2: mínimo 5 puntos en cada asignatura.",a:"Art. 61 D.210/2021"},
+    {q:"El CFIS puede homologar cursos de:",o:["Solo centros públicos","Solo la academia de policía","Centros municipales que cumplan requisitos","Cualquier centro privado"],c:2,e:"Arts. 83-85: Los centros municipales pueden ser homologados si cumplen requisitos.",a:"Art. 83-85 D.210/2021"},
+    {q:"Los requisitos de los centros municipales incluyen:",o:["Aulas, galería de tiro, gimnasio","Solo aulas","Solo medios informáticos","Biblioteca especializada"],c:0,e:"Deben contar con aulas suficientes, instalaciones adecuadas (galería tiro, gimnasio), medios técnicos.",a:"Art. 84 D.210/2021"},
+    {q:"El número de efectivos para crear la categoría de Comisario Principal es:",o:["Más de 175","Más de 200","Más de 300","Más de 400"],c:2,e:"Art. 15.1.a): >300.000 hab o >300 efectivos.",a:"Art. 15 D.210/2021"},
+    {q:"El número de efectivos para crear la categoría de Comisario es:",o:["Más de 100","Más de 150","Más de 175","Más de 200"],c:2,e:"Art. 15.1.b): >150.000 hab o >175 efectivos.",a:"Art. 15 D.210/2021"},
+    {q:"El número de efectivos para crear la categoría de Inspector es:",o:["Más de 35","Más de 50","Más de 75","Más de 100"],c:1,e:"Art. 15.1.d): >35.000 hab o >50 efectivos.",a:"Art. 15 D.210/2021"}
+],
+
+// ===== CÓDIGO PENAL (95 PREGUNTAS) =====
+penal: [
+    // CONCEPTOS GENERALES (10)
+    {q:"Son delitos las acciones y omisiones penadas por:",o:["El Código Penal","La ley","La Constitución","El ordenamiento jurídico"],c:1,e:"Art. 10 CP: 'Son delitos las acciones y omisiones dolosas o imprudentes penadas por la ley.'",a:"Art. 10 CP"},
+    {q:"La pena de prisión tiene una duración mínima de:",o:["1 mes","3 meses","6 meses","1 año"],c:1,e:"Art. 36.1 CP: duración mínima de 3 meses y máxima de 20 años.",a:"Art. 36 CP"},
+    {q:"La pena de prisión tiene una duración máxima de:",o:["15 años","20 años","25 años","30 años"],c:1,e:"Art. 36.1 CP: máxima de 20 años, salvo excepciones (art. 76).",a:"Art. 36 CP"},
+    {q:"Los delitos pueden ser:",o:["Graves, menos graves y leves","Graves y leves","Delitos y faltas","Públicos y privados"],c:0,e:"Art. 13 CP: Los delitos son graves, menos graves y leves.",a:"Art. 13 CP"},
+    {q:"Son delitos graves los castigados con pena grave según art. 33.2. Una pena es grave si la prisión es:",o:["Superior a 3 años","Superior a 5 años","Superior a 10 años","Cualquier prisión"],c:1,e:"Art. 33.2.a CP: Prisión permanente revisable y prisión superior a 5 años.",a:"Art. 33.2 CP"},
+    {q:"La responsabilidad criminal se extingue por:",o:["Muerte del reo, cumplimiento de condena, indulto, perdón del ofendido, prescripción","Solo muerte y cumplimiento","Solo prescripción","Solo indulto"],c:0,e:"Art. 130 CP: muerte, cumplimiento, remisión, indulto, perdón, prescripción.",a:"Art. 130 CP"},
+    {q:"El homicidio prescribe a los:",o:["10 años","15 años","20 años","No prescribe"],c:2,e:"Art. 131.1 CP: delitos graves castigados con prisión >15 años prescriben a los 20 años.",a:"Art. 131 CP"},
+    {q:"Las faltas administrativas se tramitan por:",o:["Vía penal","Vía administrativa","Vía civil","Vía constitucional"],c:1,e:"Las faltas penales desaparecieron en 2015. Lo que era falta ahora es delito leve o infracción administrativa.",a:"LO 1/2015"},
+    {q:"La legítima defensa es una causa de:",o:["Atenuación","Exención de responsabilidad","Agravación","Extinción"],c:1,e:"Art. 20.4 CP: Está exento de responsabilidad criminal el que obre en defensa propia o ajena.",a:"Art. 20.4 CP"},
+    {q:"El estado de necesidad es una circunstancia:",o:["Atenuante","Agravante","Eximente","Mixta"],c:2,e:"Art. 20.5 CP: circunstancia eximente de responsabilidad.",a:"Art. 20.5 CP"},
+    
+    // LESIONES (15)
+    {q:"El delito de lesiones básico (art. 147.1) requiere tratamiento:",o:["Quirúrgico","Médico o quirúrgico además de primera asistencia","Solo primera asistencia","Hospitalario"],c:1,e:"Art. 147.1 CP: Lesión que requiera además de primera asistencia, tratamiento médico o quirúrgico.",a:"Art. 147.1 CP"},
+    {q:"El delito de lesiones básico (art. 147.1) se castiga con:",o:["Multa 1-3 meses","Prisión 3 meses a 3 años","Prisión 6 meses a 3 años","Prisión 1-3 años"],c:1,e:"Art. 147.1 CP: prisión de 3 meses a 3 años o multa de 6 a 12 meses.",a:"Art. 147.1 CP"},
+    {q:"El delito leve de lesiones (art. 147.2) cuando no requiere tratamiento se castiga con:",o:["Multa 1-2 meses","Multa 1-3 meses","Multa 3-6 meses","Prisión 3-6 meses"],c:0,e:"Art. 147.2 CP: multa de 1 a 2 meses si no requiere tratamiento.",a:"Art. 147.2 CP"},
+    {q:"El maltrato de obra sin causar lesión (art. 147.3) se castiga con:",o:["Multa 1-2 meses","Multa 1-3 meses","Prisión 3-6 meses","Localización permanente"],c:0,e:"Art. 147.3 CP: multa de 1 a 2 meses.",a:"Art. 147.3 CP"},
+    {q:"Las lesiones con pérdida de órgano principal (art. 149) se castigan con:",o:["Prisión 3-6 años","Prisión 6-12 años","Prisión 8-15 años","Prisión 10-15 años"],c:1,e:"Art. 149 CP: prisión de 6 a 12 años.",a:"Art. 149 CP"},
+    {q:"Las lesiones con pérdida de órgano NO principal (art. 150) se castigan con:",o:["Prisión 2-5 años","Prisión 3-6 años","Prisión 4-8 años","Prisión 6-10 años"],c:1,e:"Art. 150 CP: prisión de 3 a 6 años.",a:"Art. 150 CP"},
+    {q:"La mutilación genital se castiga con:",o:["Prisión 3-6 años","Prisión 6-12 años","Prisión 8-15 años","Prisión 10-15 años"],c:1,e:"Art. 149.2 CP: prisión de 6 a 12 años.",a:"Art. 149.2 CP"},
+    {q:"Las lesiones del art. 147.1 se agravan (art. 148) si se usan:",o:["Armas","Ensañamiento","Víctima menor de 14 años","Todas las anteriores"],c:3,e:"Art. 148 CP: armas, ensañamiento, alevosía, víctima menor 14 o especialmente vulnerable.",a:"Art. 148 CP"},
+    {q:"La pena del art. 148 (lesiones agravadas) es:",o:["Prisión 1-3 años","Prisión 2-5 años","Prisión 3-6 años","Prisión 4-8 años"],c:1,e:"Art. 148 CP: prisión de 2 a 5 años.",a:"Art. 148 CP"},
+    {q:"La participación en riña tumultuaria (art. 154) se castiga con:",o:["Multa 3-6 meses","Prisión 3 meses a 1 año","Prisión 6 meses a 2 años","Prisión 1-2 años"],c:1,e:"Art. 154 CP: Si se causaren lesiones, prisión de 3 meses a 1 año o multa 6-12 meses.",a:"Art. 154 CP"},
+    {q:"Las lesiones por imprudencia grave (art. 152.1) si resultan del art. 149 se castigan con:",o:["Multa 3-6 meses","Prisión 3-6 meses","Prisión 1-3 años","Prisión 3-6 años"],c:2,e:"Art. 152.1.1º CP: prisión de 1 a 3 años.",a:"Art. 152.1 CP"},
+    {q:"Las lesiones por imprudencia menos grave (art. 152.2) se castigan con:",o:["Multa 1-2 meses","Multa 3 a 12 meses","Prisión 3-6 meses","Prisión 6-12 meses"],c:1,e:"Art. 152.2 CP: multa de 3 a 12 meses.",a:"Art. 152.2 CP"},
+    {q:"La violencia habitual en el ámbito doméstico (art. 173.2) se castiga con:",o:["Prisión 3 meses a 1 año","Prisión 6 meses a 3 años","Prisión 1-3 años","Prisión 2-5 años"],c:1,e:"Art. 173.2 CP: prisión de 6 meses a 3 años.",a:"Art. 173.2 CP"},
+    {q:"El consentimiento de la víctima en lesiones:",o:["Exime siempre","No exime nunca","Puede atenuar según art. 155","Agrava la pena"],c:2,e:"Art. 155 CP: El consentimiento válido del ofendido puede reducir la pena en uno o dos grados.",a:"Art. 155 CP"},
+    {q:"Las lesiones al feto (art. 157) se castigan con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Prisión 1-4 años","Prisión 2-5 años"],c:2,e:"Art. 157 CP: prisión de 1 a 4 años e inhabilitación especial.",a:"Art. 157 CP"},
+    
+    // PATRIMONIO: HURTO, ROBO, ESTAFA (20)
+    {q:"El hurto básico (art. 234) si excede 400€ se castiga con:",o:["Multa 1-3 meses","Prisión 3 a 12 meses","Prisión 6 a 18 meses","Prisión 1-3 años"],c:2,e:"Art. 234.1 CP: prisión de 6 a 18 meses si valor supera 400€.",a:"Art. 234 CP"},
+    {q:"El hurto leve (art. 234.2) si NO excede 400€ se castiga con:",o:["Multa 1-3 meses","Multa 3-6 meses","Prisión 3-6 meses","Localización permanente"],c:0,e:"Art. 234.2 CP: multa de 1 a 3 meses si valor no excede 400€.",a:"Art. 234.2 CP"},
+    {q:"El robo con fuerza en las cosas (art. 240) se castiga con:",o:["Prisión 6 meses a 2 años","Prisión 1 a 3 años","Prisión 2 a 5 años","Prisión 3 a 5 años"],c:1,e:"Art. 240 CP: prisión de 1 a 3 años.",a:"Art. 240 CP"},
+    {q:"El robo con violencia o intimidación (art. 242) se castiga con:",o:["Prisión 1 a 3 años","Prisión 2 a 5 años","Prisión 3 a 5 años","Prisión 3 a 6 años"],c:1,e:"Art. 242.1 CP: prisión de 2 a 5 años.",a:"Art. 242 CP"},
+    {q:"El robo en casa habitada (art. 241) se castiga con:",o:["Prisión 1 a 3 años","Prisión 2 a 5 años","Prisión 2 a 6 años","Prisión 3 a 6 años"],c:1,e:"Art. 241.1 CP: prisión de 2 a 5 años.",a:"Art. 241 CP"},
+    {q:"El robo con violencia en casa habitada (art. 242.2) se castiga con:",o:["Prisión 2 a 5 años","Prisión 3 años y 6 meses a 5 años","Prisión 3 a 6 años","Prisión 4 a 8 años"],c:1,e:"Art. 242.2 CP: prisión de 3 años y 6 meses a 5 años.",a:"Art. 242.2 CP"},
+    {q:"La estafa básica (art. 248-249) se castiga con:",o:["Multa 1-3 meses","Prisión 6 meses a 3 años","Prisión 1 a 6 años","Prisión 2 a 5 años"],c:1,e:"Art. 249 CP: prisión de 6 meses a 3 años.",a:"Art. 249 CP"},
+    {q:"La estafa agravada (art. 250) cuando supera 50.000€ se castiga con:",o:["Prisión 1 a 3 años","Prisión 1 a 6 años","Prisión 2 a 6 años","Prisión 4 a 8 años"],c:1,e:"Art. 250.1 CP: prisión de 1 a 6 años y multa de 6 a 12 meses.",a:"Art. 250.1 CP"},
+    {q:"La apropiación indebida (art. 253) si supera 400€ se castiga con:",o:["Multa 3-6 meses","Prisión 6 meses a 3 años","Prisión 1 a 4 años","Prisión 1 a 6 años"],c:1,e:"Art. 253 CP: penas del art. 249 (prisión 6 meses a 3 años).",a:"Art. 253 CP"},
+    {q:"Los daños (art. 263) si superan 400€ se castigan con:",o:["Multa 3-6 meses","Multa 6-24 meses","Prisión 1-3 años","Prisión 6 meses a 2 años"],c:2,e:"Art. 263.1 CP: prisión de 1 a 3 años y multa de 12 a 24 meses.",a:"Art. 263 CP"},
+    {q:"Robar utilizando menores de 16 años agrava:",o:["En un grado","En dos grados","En mitad superior","No agrava"],c:0,e:"Art. 235.4 CP: se impone la pena en su mitad superior o superior en grado.",a:"Art. 235.4 CP"},
+    {q:"El allanamiento de morada (art. 202) se castiga con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Prisión 1 a 2 años","Prisión 1 a 4 años"],c:1,e:"Art. 202.1 CP: prisión de 6 meses a 2 años.",a:"Art. 202 CP"},
+    {q:"El allanamiento con violencia o intimidación (art. 202.2) se castiga con:",o:["Prisión 6 meses a 2 años","Prisión 1 a 4 años","Prisión 2 a 4 años","Prisión 2 a 6 años"],c:1,e:"Art. 202.2 CP: prisión de 1 a 4 años y multa de 6 a 12 meses.",a:"Art. 202.2 CP"},
+    {q:"La usurpación de bienes inmuebles (art. 245) se castiga con:",o:["Multa 3-6 meses","Multa 6-18 meses","Prisión 1-2 años","Prisión 3 meses a 6 meses"],c:0,e:"Art. 245.2 CP: multa de 3 a 6 meses (ocupación pacífica).",a:"Art. 245 CP"},
+    {q:"El umbral para distinguir hurto/robo leve del básico es:",o:["200€","300€","400€","500€"],c:2,e:"400€ es el umbral: por debajo es leve, por encima es tipo básico.",a:"Arts. 234, 249 CP"},
+    {q:"La sustracción de vehículo a motor (art. 244) para uso temporal se castiga con:",o:["Multa 3-12 meses","TBC 31-90 días","Prisión 6-12 meses","Todas pueden aplicarse"],c:3,e:"Art. 244.1 CP: TBC 31-90 días o multa 2-12 meses (sin ánimo de apropiación).",a:"Art. 244 CP"},
+    {q:"La receptación (art. 298) se castiga con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Prisión 1 a 3 años","Prisión 3 a 6 años"],c:1,e:"Art. 298.1 CP: prisión de 6 meses a 2 años.",a:"Art. 298 CP"},
+    {q:"El delito continuado de hurto requiere:",o:["Dos actos","Tres actos","Pluralidad de actos contra el mismo sujeto o similar modo","Un solo acto de especial gravedad"],c:2,e:"Art. 74 CP: pluralidad de acciones que ofendan a uno o varios sujetos con aprovechamiento idéntica ocasión.",a:"Art. 74 CP"},
+    {q:"El robo con armas (art. 242.3) se castiga con:",o:["Prisión 2-5 años","Prisión 3-5 años","Prisión 5-10 años","Mitad superior de 2-5 años"],c:2,e:"Art. 242.3 CP: prisión de 5 a 10 años si se hace uso de armas.",a:"Art. 242.3 CP"},
+    {q:"La extorsión (art. 243) se castiga con:",o:["Prisión 1-3 años","Prisión 1-5 años","Prisión 2-5 años","Prisión 3-6 años"],c:1,e:"Art. 243 CP: prisión de 1 a 5 años.",a:"Art. 243 CP"},
+    
+    // SEGURIDAD VIAL (15)
+    {q:"Conducir con tasa de alcohol superior a 0,60 mg/l en aire es:",o:["Infracción administrativa","Delito leve","Delito menos grave","Falta"],c:2,e:"Art. 379.2 CP: delito si supera 0,60 mg/l aire o 1,2 g/l sangre.",a:"Art. 379.2 CP"},
+    {q:"La negativa a someterse a pruebas de alcoholemia se castiga con:",o:["Multa","Prisión 3-6 meses","Prisión 6 meses a 1 año","Prisión 1-2 años"],c:2,e:"Art. 383 CP: prisión de 6 meses a 1 año.",a:"Art. 383 CP"},
+    {q:"El delito de conducción temeraria (art. 380) se castiga con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Prisión 1-2 años","Prisión 2-5 años"],c:1,e:"Art. 380.1 CP: prisión de 6 meses a 2 años.",a:"Art. 380 CP"},
+    {q:"Conducir sin permiso habiendo perdido todos los puntos (art. 384) se castiga con:",o:["Multa 3-6 meses","Prisión 3-6 meses o multa 12-24 meses","Prisión 6-12 meses","Prisión 1-2 años"],c:1,e:"Art. 384 CP: prisión 3-6 meses o multa 12-24 meses o TBC 31-90 días.",a:"Art. 384 CP"},
+    {q:"Conducir sin haber obtenido nunca el permiso (art. 384) se castiga con:",o:["Multa 3-6 meses","Prisión 3-6 meses o multa 12-24 meses","Prisión 6-12 meses","TBC únicamente"],c:1,e:"Art. 384 CP: misma pena que por pérdida de puntos.",a:"Art. 384 CP"},
+    {q:"El exceso de velocidad penalmente relevante en vía urbana es superar en:",o:["40 km/h","50 km/h","60 km/h","80 km/h"],c:2,e:"Art. 379.1 CP: superar en más de 60 km/h en vía urbana.",a:"Art. 379.1 CP"},
+    {q:"El exceso de velocidad penalmente relevante en vía interurbana es superar en:",o:["60 km/h","70 km/h","80 km/h","100 km/h"],c:2,e:"Art. 379.1 CP: superar en más de 80 km/h en vía interurbana.",a:"Art. 379.1 CP"},
+    {q:"Originar grave riesgo para la circulación alterando señales (art. 385) se castiga con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Prisión 1-2 años","Prisión 1-4 años"],c:1,e:"Art. 385 CP: prisión de 6 meses a 2 años o multa 12-24 meses y TBC.",a:"Art. 385 CP"},
+    {q:"El homicidio imprudente con vehículo a motor (art. 142) se castiga con:",o:["Prisión 1-4 años","Prisión 1-5 años","Prisión 2-5 años","Prisión 3-6 años"],c:0,e:"Art. 142.1 CP: prisión de 1 a 4 años para imprudencia grave.",a:"Art. 142 CP"},
+    {q:"Las lesiones graves imprudentes con vehículo (art. 152) se castigan con:",o:["Prisión 3-6 meses","Prisión 6 meses a 2 años","Prisión 1-3 años","Prisión 2-4 años"],c:2,e:"Art. 152.1.1º CP: prisión de 1 a 3 años (si resultan lesiones del art. 149).",a:"Art. 152 CP"},
+    {q:"La omisión del deber de socorro (art. 195) en accidente de tráfico se castiga con:",o:["Multa 3-6 meses","Prisión 6 meses a 4 años","Prisión 6 meses a 2 años","Prisión 1-4 años"],c:1,e:"Art. 195.3 CP: si el accidente fue fortuito, prisión de 6 meses a 4 años.",a:"Art. 195 CP"},
+    {q:"El delito de conducción bajo influencia de drogas requiere:",o:["Cualquier consumo","Influencia que afecte a la conducción","Test positivo únicamente","Posesión de drogas"],c:1,e:"Art. 379.2 CP: conducir bajo la influencia de drogas tóxicas, estupefacientes, sustancias psicotrópicas.",a:"Art. 379.2 CP"},
+    {q:"La temeridad manifiesta y desprecio por la vida de los demás convierte el delito en:",o:["Homicidio","Homicidio imprudente","Art. 381 (conducción suicida)","Asesinato"],c:2,e:"Art. 381 CP: conducción con temeridad manifiesta y desprecio por la vida de los demás.",a:"Art. 381 CP"},
+    {q:"La pena del art. 381 (conducción suicida) es:",o:["Prisión 1-2 años","Prisión 2-5 años","Prisión 2-5 años o 5-10 años si hay peligro concreto","Prisión 5-10 años"],c:2,e:"Art. 381 CP: 2-5 años; si peligro concreto: 5-10 años.",a:"Art. 381 CP"},
+    {q:"La privación del derecho a conducir como pena accesoria en delitos viales es de:",o:["6 meses a 2 años","1 a 4 años","1 a 6 años","2 a 10 años"],c:2,e:"Arts. 379-384 CP: generalmente de 1 a 4 años, pudiendo llegar a 6 años.",a:"Arts. 379-384 CP"},
+    
+    // FUNCIONARIOS (15)
+    {q:"El delito de prevaricación (art. 404) se castiga con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Inhabilitación especial 9-15 años","Prisión 1-4 años"],c:2,e:"Art. 404 CP: inhabilitación especial 9-15 años.",a:"Art. 404 CP"},
+    {q:"El cohecho pasivo propio (art. 419) se castiga con prisión de:",o:["1 a 3 años","2 a 4 años","3 a 6 años","4 a 8 años"],c:2,e:"Art. 419 CP: prisión 3-6 años, multa 12-24 meses, inhabilitación especial 9-12 años.",a:"Art. 419 CP"},
+    {q:"La malversación básica (art. 432) se castiga con prisión de:",o:["6 meses a 3 años","1 a 4 años","2 a 6 años","3 a 8 años"],c:2,e:"Art. 432.1 CP: prisión de 2 a 6 años e inhabilitación especial.",a:"Art. 432 CP"},
+    {q:"El cohecho pasivo impropio (art. 420) se castiga con:",o:["Prisión 1-2 años","Prisión 2-4 años","Prisión 3-6 años","Multa únicamente"],c:1,e:"Art. 420 CP: prisión de 2 a 4 años.",a:"Art. 420 CP"},
+    {q:"El cohecho activo (art. 424) se castiga con:",o:["Penas inferiores al funcionario","Las mismas penas que el funcionario corrupto","Penas superiores","Solo multa"],c:1,e:"Art. 424 CP: las mismas penas que los funcionarios corruptos.",a:"Art. 424 CP"},
+    {q:"La malversación agravada si supera 50.000€ se castiga con:",o:["Prisión 2-6 años","Prisión 4-8 años","Prisión 6-10 años","Prisión 8-12 años"],c:1,e:"Art. 432.3.a CP: prisión de 4 a 8 años si supera 50.000€.",a:"Art. 432.3 CP"},
+    {q:"La malversación si supera 250.000€ se castiga con:",o:["Prisión 4-8 años","Prisión 6-10 años","Prisión 6-12 años","Prisión 8-15 años"],c:2,e:"Art. 432.3.b CP: prisión de 6 a 12 años si supera 250.000€.",a:"Art. 432.3 CP"},
+    {q:"El funcionario que revela secretos (art. 417) comete:",o:["Revelación de secretos","Infidelidad en custodia de documentos","Prevaricación","Cohecho"],c:0,e:"Art. 417 CP: Revelación de secretos o informaciones de las que tenga conocimiento por razón de su cargo.",a:"Art. 417 CP"},
+    {q:"El abandono de destino (art. 407) se castiga con:",o:["Multa 3-6 meses","Multa 3-8 meses e inhabilitación especial 1-3 años","Prisión 6-12 meses","Suspensión de empleo"],c:1,e:"Art. 407 CP: multa de 3 a 8 meses e inhabilitación especial para empleo 1-3 años.",a:"Art. 407 CP"},
+    {q:"La desobediencia a la autoridad (art. 410) por funcionario se castiga con:",o:["Multa 3-6 meses","Multa 3-12 meses e inhabilitación 6 meses a 2 años","Prisión 3-6 meses","Suspensión"],c:1,e:"Art. 410 CP: multa de 3 a 12 meses e inhabilitación especial.",a:"Art. 410 CP"},
+    {q:"El tráfico de influencias por funcionario (art. 428) se castiga con:",o:["Prisión 6 meses a 2 años","Prisión 1 a 4 años","Prisión 2 a 6 años","Multa únicamente"],c:0,e:"Art. 428 CP: prisión de 6 meses a 2 años.",a:"Art. 428 CP"},
+    {q:"El fraude en contratación pública (art. 436) se castiga con:",o:["Prisión 1-3 años","Prisión 2-6 años","Prisión 3-8 años","Multa e inhabilitación"],c:0,e:"Art. 436 CP: prisión de 1 a 3 años e inhabilitación especial.",a:"Art. 436 CP"},
+    {q:"La prevaricación judicial (art. 446) se castiga con:",o:["Inhabilitación 10-20 años","Prisión 1-4 años + inhabilitación","Prisión 2-6 años","Multa únicamente"],c:1,e:"Art. 446 CP: prisión de 1 a 4 años + inhabilitación absoluta.",a:"Art. 446 CP"},
+    {q:"El cohecho implica que el funcionario reciba:",o:["Cualquier regalo","Dádiva, favor o retribución","Solo dinero","Solo favores sexuales"],c:1,e:"Arts. 419-427 CP: dádiva, favor o retribución de cualquier clase.",a:"Arts. 419-427 CP"},
+    {q:"El concepto de funcionario a efectos penales (art. 24) incluye:",o:["Solo funcionarios de carrera","Funcionarios y autoridades","Todo el que participa en funciones públicas","Solo personal laboral"],c:2,e:"Art. 24.2 CP: el que participe en el ejercicio de funciones públicas.",a:"Art. 24.2 CP"},
+    
+    // SALUD PÚBLICA/DROGAS (10)
+    {q:"El tráfico de drogas que causan grave daño (art. 368) se castiga con:",o:["Prisión 1-3 años","Prisión 3-6 años","Prisión 6-9 años","Prisión 9-12 años"],c:1,e:"Art. 368 CP (tras LO 1/2015): prisión 3-6 años para sustancias que causan grave daño.",a:"Art. 368 CP"},
+    {q:"El tráfico de drogas que NO causan grave daño (art. 368) se castiga con:",o:["Prisión 6 meses a 2 años","Prisión 1-3 años","Prisión 3-6 años","Multa únicamente"],c:1,e:"Art. 368 CP: prisión de 1 a 3 años para sustancias que no causan grave daño.",a:"Art. 368 CP"},
+    {q:"Son sustancias que causan grave daño a la salud:",o:["Cannabis, hachís","Cocaína, heroína, anfetaminas","Todas las drogas","Solo heroína"],c:1,e:"Cocaína, heroína, LSD, éxtasis, anfetaminas = grave daño. Cannabis = no grave daño.",a:"Jurisprudencia TS"},
+    {q:"La cantidad de notoria importancia en cocaína es:",o:["500 gramos","750 gramos","1.000 gramos","2.000 gramos"],c:1,e:"Acuerdo Pleno TS: 750 gramos de cocaína.",a:"Acuerdo TS 19/10/2001"},
+    {q:"La cantidad de notoria importancia en heroína es:",o:["100 gramos","200 gramos","300 gramos","500 gramos"],c:2,e:"Acuerdo Pleno TS: 300 gramos de heroína.",a:"Acuerdo TS 19/10/2001"},
+    {q:"La cantidad de notoria importancia en hachís es:",o:["2,5 kg","5 kg","10 kg","25 kg"],c:0,e:"Acuerdo Pleno TS: 2,5 kg de hachís.",a:"Acuerdo TS 19/10/2001"},
+    {q:"El tráfico de drogas a menores o en centros educativos (art. 369) es:",o:["Tipo atenuado","Tipo básico","Tipo agravado","Falta"],c:2,e:"Art. 369.1 CP: circunstancias agravantes que elevan la pena.",a:"Art. 369.1 CP"},
+    {q:"La pertenencia a organización de traficantes (art. 369 bis) eleva la pena a:",o:["Mitad superior","Superior en grado","Prisión 9-12 años","Prisión 12-18 años"],c:2,e:"Art. 369 bis CP: prisión de 9 a 12 años (jefes: 12-18 años).",a:"Art. 369 bis CP"},
+    {q:"El cultivo de cannabis para autoconsumo es:",o:["Delito","Falta administrativa","Atípico si es cantidad mínima","Siempre delito"],c:2,e:"Jurisprudencia: autoconsumo no es delito; cultivo compartido entre consumidores puede ser atípico.",a:"Jurisprudencia TS"},
+    {q:"El tipo atenuado de tráfico (art. 368 párrafo 2º) se aplica cuando:",o:["Es primera vez","La cantidad es mínima","Escasa entidad del hecho y circunstancias personales","El autor es drogodependiente"],c:2,e:"Art. 368 in fine CP: pena inferior en grado cuando por escasa entidad y circunstancias personales.",a:"Art. 368 CP"},
+    
+    // ATENTADO, RESISTENCIA, DESOBEDIENCIA (10)
+    {q:"El delito de atentado contra autoridad (art. 550) se castiga con:",o:["6 meses a 2 años","1 a 4 años","2 a 4 años","3 a 5 años"],c:1,e:"Art. 550.1 CP: prisión de 1 a 4 años.",a:"Art. 550 CP"},
+    {q:"El delito de resistencia a la autoridad (art. 556) se castiga con:",o:["Multa 3-6 meses","Prisión 3 meses a 1 año","Prisión 6 meses a 1 año","Prisión 1-2 años"],c:2,e:"Art. 556.1 CP: prisión de 6 meses a 1 año.",a:"Art. 556 CP"},
+    {q:"El delito de desobediencia grave (art. 556) se castiga con:",o:["Multa 1-3 meses","Multa 3-6 meses","Prisión 3-6 meses","Prisión 6 meses a 1 año"],c:0,e:"Art. 556.1 CP: multa de 1 a 3 meses para desobediencia grave.",a:"Art. 556.1 CP"},
+    {q:"A efectos del delito de atentado, se considera autoridad:",o:["Solo jueces y fiscales","Solo policías","Los que ejercen funciones públicas","Los que por disposición legal o cargo tienen mando o jurisdicción"],c:3,e:"Art. 24.1 CP: quien por sí solo o como miembro de corporación tiene mando o ejerce jurisdicción propia.",a:"Art. 24.1 CP"},
+    {q:"El atentado a funcionario que no sea autoridad (art. 550) se castiga con:",o:["Prisión 6 meses a 2 años","Prisión 1 a 4 años","Prisión 6 meses a 3 años","Multa únicamente"],c:2,e:"Art. 550.1 CP: prisión de 6 meses a 3 años cuando la víctima sea funcionario público.",a:"Art. 550.1 CP"},
+    {q:"El atentado con armas u objetos peligrosos (art. 551) se castiga con:",o:["Pena básica","Pena en su mitad superior","Pena superior en grado","Prisión 3-6 años"],c:2,e:"Art. 551 CP: pena superior en grado si concurren ciertas circunstancias.",a:"Art. 551 CP"},
+    {q:"El acometimiento a agente de la autoridad constituye:",o:["Resistencia","Desobediencia","Atentado","Desacato"],c:2,e:"Art. 550.1 CP: cometen atentado los que acometan a autoridad, funcionario o sus agentes.",a:"Art. 550.1 CP"},
+    {q:"Agredir a Fuerzas y Cuerpos de Seguridad con resultado de lesiones (art. 551.1) se castiga con:",o:["Pena básica","Mitad superior","Superior en grado","Máxima del tipo"],c:2,e:"Art. 551.1 CP: pena superior en grado.",a:"Art. 551.1 CP"},
+    {q:"La resistencia pasiva a la autoridad es:",o:["Siempre delito","Delito solo si es grave","Atípica","Falta administrativa"],c:2,e:"Resistencia pasiva (dejarse peso muerto) es atípica penalmente; puede ser infracción administrativa.",a:"Jurisprudencia"},
+    {q:"Las injurias a la autoridad en el ejercicio de sus funciones (art. 504) se castigan con:",o:["Multa 3-6 meses","Multa 6-12 meses","Prisión 6 meses a 1 año","Prisión 3 meses a 1 año"],c:1,e:"Art. 504 CP: multa de 6 a 12 meses.",a:"Art. 504 CP"},
+    
+    // ASOCIACIONES ILÍCITAS (5)
+    {q:"Las asociaciones que tengan por objeto cometer algún delito son:",o:["Prohibidas","Suspendidas","Ilícitas","Intervenidas"],c:2,e:"Art. 515.1 CP: Las que tengan por objeto cometer algún delito son asociaciones ilícitas.",a:"Art. 515.1 CP"},
+    {q:"Los fundadores de asociaciones ilícitas (art. 517) se castigan con:",o:["Prisión 1-3 años","Prisión 2-4 años","Prisión 3-6 años","Prisión 4-8 años"],c:1,e:"Art. 517 CP: prisión de 2 a 4 años para fundadores, directores y presidentes.",a:"Art. 517 CP"},
+    {q:"Los miembros activos de asociaciones ilícitas (art. 517) se castigan con:",o:["Multa 6-12 meses","Prisión 6 meses a 2 años","Prisión 1-3 años","Prisión 2-4 años"],c:2,e:"Art. 517 CP: prisión de 1 a 3 años para miembros activos.",a:"Art. 517 CP"},
+    {q:"Las bandas armadas u organizaciones terroristas (art. 515.2) son:",o:["Asociaciones prohibidas","Asociaciones ilícitas punibles","Organizaciones criminales","Grupos violentos"],c:1,e:"Art. 515.2 CP: Son asociaciones ilícitas las bandas armadas y organizaciones terroristas.",a:"Art. 515.2 CP"},
+    {q:"La pertenencia a organización criminal (art. 570 bis) se castiga con:",o:["Prisión 1-3 años","Prisión 2-5 años","Prisión 3-6 años","Según el delito cometido"],c:1,e:"Art. 570 bis.1 CP: prisión de 2 a 5 años para la participación activa.",a:"Art. 570 bis CP"}
+],
+
+// ===== TRÁFICO (55 PREGUNTAS) =====
+trafico: [
+    // TASAS ALCOHOL (10)
+    {q:"La tasa máxima de alcohol para conductores generales es:",o:["0,15 mg/l aire","0,25 mg/l aire","0,30 mg/l aire","0,50 mg/l aire"],c:1,e:"Art. 20 RGC: 0,25 mg/l en aire espirado (0,5 g/l en sangre).",a:"Art. 20 RGC"},
+    {q:"La tasa máxima para conductores noveles y profesionales es:",o:["0,10 mg/l","0,15 mg/l","0,20 mg/l","0,25 mg/l"],c:1,e:"Art. 20 RGC: 0,15 mg/l en aire (0,3 g/l en sangre).",a:"Art. 20 RGC"},
+    {q:"Se considera conductor novel al que tiene permiso con antigüedad inferior a:",o:["1 año","2 años","3 años","5 años"],c:1,e:"Novel: permiso con antigüedad inferior a 2 años.",a:"RGC"},
+    {q:"La tasa penal de alcohol en aire espirado es:",o:["0,25 mg/l","0,40 mg/l","0,60 mg/l","0,80 mg/l"],c:2,e:"Art. 379.2 CP: más de 0,60 mg/l en aire es delito.",a:"Art. 379.2 CP"},
+    {q:"La tasa penal de alcohol en sangre es:",o:["0,5 g/l","0,8 g/l","1,0 g/l","1,2 g/l"],c:3,e:"Art. 379.2 CP: más de 1,2 g/l en sangre es delito.",a:"Art. 379.2 CP"},
+    {q:"La segunda prueba de alcoholemia debe realizarse:",o:["Inmediatamente","A los 5 minutos","A los 10 minutos mínimo","A los 15 minutos"],c:2,e:"Art. 23 RGC: transcurridos 10 minutos como mínimo.",a:"Art. 23 RGC"},
+    {q:"El conductor puede solicitar análisis de sangre:",o:["Nunca","Solo si da positivo","Siempre","Solo si supera tasa penal"],c:2,e:"Art. 23 RGC: el interesado puede solicitar contraste mediante análisis de sangre.",a:"Art. 23 RGC"},
+    {q:"La negativa a las pruebas de alcoholemia constituye:",o:["Infracción muy grave","Delito del art. 383 CP","Ambas cosas","Solo infracción"],c:2,e:"Es infracción muy grave (TRLTSV) y delito (art. 383 CP).",a:"Art. 383 CP / Art. 77 TRLTSV"},
+    {q:"La inmovilización del vehículo por positivo en alcohol es:",o:["Obligatoria","Facultativa del agente","Solo si supera tasa penal","Nunca"],c:0,e:"Art. 25 RGC: se procederá a la inmovilización del vehículo.",a:"Art. 25 RGC"},
+    {q:"El etilómetro evidencial debe ser:",o:["Cualquiera homologado","Autorizado y verificado","Solo de un modelo concreto","Digital únicamente"],c:1,e:"Art. 22 RGC: etilómetros oficialmente autorizados y verificados.",a:"Art. 22 RGC"},
+    
+    // VELOCIDADES (10)
+    {q:"La velocidad máxima genérica en vías urbanas es:",o:["30 km/h","40 km/h","50 km/h","60 km/h"],c:2,e:"Art. 50 RGC: 50 km/h en travesías y vías urbanas.",a:"Art. 50 RGC"},
+    {q:"En vías urbanas de un solo carril por sentido, la velocidad máxima es:",o:["20 km/h","30 km/h","40 km/h","50 km/h"],c:1,e:"Vías de un único carril por sentido: 30 km/h.",a:"Art. 50 RGC"},
+    {q:"En vías de plataforma única, la velocidad es:",o:["10 km/h","20 km/h","30 km/h","40 km/h"],c:1,e:"Plataforma única (acera-calzada mismo nivel): 20 km/h.",a:"Art. 50 RGC"},
+    {q:"La velocidad máxima en autopistas es:",o:["100 km/h","110 km/h","120 km/h","130 km/h"],c:2,e:"Art. 48 RGC: 120 km/h en autopistas y autovías.",a:"Art. 48 RGC"},
+    {q:"La velocidad máxima en carreteras convencionales es:",o:["80 km/h","90 km/h","100 km/h","110 km/h"],c:1,e:"Art. 48 RGC: 90 km/h en carreteras convencionales.",a:"Art. 48 RGC"},
+    {q:"La velocidad mínima en autopistas es:",o:["50 km/h","60 km/h","70 km/h","No hay mínima"],c:1,e:"Art. 49 RGC: velocidad mínima de 60 km/h en autopistas.",a:"Art. 49 RGC"},
+    {q:"Superar en más de 60 km/h el límite en vía urbana es:",o:["Infracción grave","Infracción muy grave","Delito","Infracción leve"],c:2,e:"Art. 379.1 CP: delito contra la seguridad vial.",a:"Art. 379.1 CP"},
+    {q:"Superar en más de 80 km/h el límite en vía interurbana es:",o:["Infracción grave","Infracción muy grave","Delito","Infracción leve"],c:2,e:"Art. 379.1 CP: delito contra la seguridad vial.",a:"Art. 379.1 CP"},
+    {q:"Circular a velocidad anormalmente reducida sin causa justificada es:",o:["Permitido","Infracción leve","Infracción grave","Delito"],c:2,e:"Art. 49 RGC / Art. 76 TRLTSV: infracción grave.",a:"Art. 76 TRLTSV"},
+    {q:"El exceso de velocidad del 50% sobre el límite establecido pierde:",o:["2 puntos","4 puntos","6 puntos","8 puntos"],c:2,e:"Anexo II TRLTSV: 6 puntos si supera el 50%.",a:"Anexo II TRLTSV"},
+    
+    // SEÑALES Y PRIORIDAD (10)
+    {q:"El orden de prioridad de las señales es:",o:["Verticales, semáforos, agentes, marcas","Agentes, semáforos, verticales, marcas","Semáforos, agentes, verticales, marcas","Agentes, verticales, semáforos, marcas"],c:1,e:"1º Agentes, 2º Semáforos, 3º Señales verticales, 4º Marcas viales.",a:"Art. 143 RGC"},
+    {q:"En una intersección sin señalización tiene preferencia:",o:["El que viene por la derecha","El que viene por la izquierda","El que circula más rápido","El primero en llegar"],c:0,e:"Art. 57 RGC: preferencia del que viene por la derecha.",a:"Art. 57 RGC"},
+    {q:"Los vehículos prioritarios en servicio urgente:",o:["Siempre tienen preferencia","Tienen preferencia si usan señales ópticas y acústicas","Solo con sirena","Nunca tienen preferencia"],c:1,e:"Art. 68 RGC: preferencia cuando utilicen señales especiales.",a:"Art. 68 RGC"},
+    {q:"Una señal R-1 (CEDA EL PASO) obliga a:",o:["Parar siempre","Ceder el paso sin parar necesariamente","Parar y ceder el paso","Reducir velocidad únicamente"],c:1,e:"Art. 151 RGC: ceder el paso sin necesidad de detenerse.",a:"Art. 151 RGC"},
+    {q:"Una señal R-2 (STOP) obliga a:",o:["Reducir velocidad","Parar siempre","Parar solo si hay vehículos","Ceder el paso"],c:1,e:"Art. 151 RGC: detención obligatoria.",a:"Art. 151 RGC"},
+    {q:"El semáforo en ámbar fijo significa:",o:["Paso permitido","Detención si es posible","Paso con precaución","Prohibido el paso"],c:1,e:"Art. 146 RGC: detención salvo que no pueda hacerse en condiciones de seguridad.",a:"Art. 146 RGC"},
+    {q:"El semáforo en ámbar intermitente significa:",o:["Paso permitido","Detención obligatoria","Precaución, paso permitido","Semáforo averiado"],c:2,e:"Art. 146 RGC: paso con precaución.",a:"Art. 146 RGC"},
+    {q:"La señal P-20 indica:",o:["Peatones","Niños","Paso de peatones","Zona escolar"],c:0,e:"P-20: peligro por proximidad de lugar frecuentado por peatones.",a:"Anexo I RGC"},
+    {q:"La línea longitudinal continua indica:",o:["Prohibido adelantar","Prohibido estacionar","Prohibido cambiar de carril","A y C son correctas"],c:3,e:"Art. 167 RGC: prohibido atravesar o circular sobre ella.",a:"Art. 167 RGC"},
+    {q:"La marca vial de paso de peatones son:",o:["Franjas longitudinales","Franjas transversales","Líneas de borde","Flechas"],c:1,e:"Art. 168 RGC: bandas paralelas al eje de la calzada (tipo cebra).",a:"Art. 168 RGC"},
+    
+    // PUNTOS Y SANCIONES (15)
+    {q:"El saldo inicial de puntos del permiso es:",o:["8 puntos","10 puntos","12 puntos","15 puntos"],c:2,e:"Art. 65 TRLTSV: saldo inicial de 12 puntos (8 para noveles).",a:"Art. 65 TRLTSV"},
+    {q:"El máximo de puntos alcanzable es:",o:["12 puntos","14 puntos","15 puntos","16 puntos"],c:2,e:"Máximo 15 puntos por buen comportamiento.",a:"Art. 65 TRLTSV"},
+    {q:"Saltarse un semáforo en rojo supone la pérdida de:",o:["2 puntos","3 puntos","4 puntos","6 puntos"],c:2,e:"Semáforo rojo: pérdida de 4 puntos.",a:"Anexo II TRLTSV"},
+    {q:"Conducir usando el móvil supone la pérdida de:",o:["2 puntos","3 puntos","4 puntos","6 puntos"],c:3,e:"Uso de móvil: pérdida de 6 puntos (reformado).",a:"Anexo II TRLTSV"},
+    {q:"Conducir con tasa de alcohol superior a la permitida supone:",o:["2 puntos","4 puntos","6 puntos","8 puntos"],c:2,e:"Alcohol/drogas: pérdida de 6 puntos.",a:"Anexo II TRLTSV"},
+    {q:"El pago de una multa en los primeros 20 días reduce su importe en:",o:["25%","30%","40%","50%"],c:3,e:"Art. 94 TRLTSV: reducción del 50% por pronto pago.",a:"Art. 94 TRLTSV"},
+    {q:"La distancia lateral mínima para adelantar a ciclistas es:",o:["1 metro","1,5 metros","2 metros","La prudente"],c:1,e:"Art. 85 RGC: separación lateral mínima de 1,5 metros.",a:"Art. 85 RGC"},
+    {q:"La ITV de un vehículo nuevo de turismo se pasa por primera vez a los:",o:["2 años","3 años","4 años","5 años"],c:2,e:"Turismos nuevos: primera ITV a los 4 años.",a:"RD 920/2017"},
+    {q:"Circular sin cinturón supone la pérdida de:",o:["2 puntos","3 puntos","4 puntos","6 puntos"],c:2,e:"Anexo II TRLTSV: 4 puntos.",a:"Anexo II TRLTSV"},
+    {q:"Circular sin casco en motocicleta supone la pérdida de:",o:["2 puntos","3 puntos","4 puntos","6 puntos"],c:2,e:"Anexo II TRLTSV: 4 puntos.",a:"Anexo II TRLTSV"},
+    {q:"No respetar la prioridad de paso del peatón supone la pérdida de:",o:["2 puntos","4 puntos","6 puntos","8 puntos"],c:1,e:"Anexo II TRLTSV: 4 puntos.",a:"Anexo II TRLTSV"},
+    {q:"Las infracciones leves prescriben a los:",o:["3 meses","6 meses","1 año","2 años"],c:0,e:"Art. 112 TRLTSV: 3 meses.",a:"Art. 112 TRLTSV"},
+    {q:"Las infracciones graves prescriben a los:",o:["3 meses","6 meses","1 año","2 años"],c:1,e:"Art. 112 TRLTSV: 6 meses.",a:"Art. 112 TRLTSV"},
+    {q:"Las infracciones muy graves prescriben a los:",o:["3 meses","6 meses","1 año","2 años"],c:2,e:"Art. 112 TRLTSV: 1 año.",a:"Art. 112 TRLTSV"},
+    {q:"Para conductores noveles, el saldo inicial es:",o:["6 puntos","8 puntos","10 puntos","12 puntos"],c:1,e:"Art. 65 TRLTSV: 8 puntos para noveles.",a:"Art. 65 TRLTSV"},
+    
+    // PROCEDIMIENTOS Y DOCUMENTACIÓN (10)
+    {q:"El conductor debe llevar obligatoriamente:",o:["Permiso de conducir","Permiso de circulación","ITV y seguro","Todas son correctas"],c:3,e:"Arts. 59-61 RGC: permiso conducir, circulación, ITV y seguro obligatorio.",a:"Arts. 59-61 RGC"},
+    {q:"El boletín de denuncia debe contener:",o:["Solo los hechos","Hechos, infracción, sanción prevista, derechos","Solo identificación del denunciado","Firma del infractor"],c:1,e:"Art. 88 TRLTSV: hechos, infracción, sanción, identificación, derechos.",a:"Art. 88 TRLTSV"},
+    {q:"El plazo para presentar alegaciones a una denuncia es:",o:["10 días","15 días","20 días","30 días"],c:2,e:"Art. 96 TRLTSV: 20 días naturales.",a:"Art. 96 TRLTSV"},
+    {q:"La inmovilización del vehículo puede realizarse por:",o:["Carecer de seguro","Alcoholemia positiva","Deficiencias graves","Todas son correctas"],c:3,e:"Art. 104 TRLTSV: diversas causas de inmovilización.",a:"Art. 104 TRLTSV"},
+    {q:"El recurso contra sanciones de tráfico se presenta en:",o:["10 días","20 días","30 días","1 mes"],c:3,e:"Art. 100 TRLTSV: 1 mes para recurso de reposición.",a:"Art. 100 TRLTSV"},
+    {q:"La notificación de denuncia se puede realizar:",o:["En el acto","Por correo certificado","En DEV","Todas son correctas"],c:3,e:"Art. 90 TRLTSV: en el acto o posteriormente.",a:"Art. 90 TRLTSV"},
+    {q:"El titular del vehículo tiene obligación de identificar al conductor:",o:["Siempre","Nunca","Solo si lo requiere la autoridad","Solo en infracciones graves"],c:2,e:"Art. 93 TRLTSV: deber de identificación cuando lo requiera la autoridad.",a:"Art. 93 TRLTSV"},
+    {q:"La sanción por no identificar al conductor es:",o:["Multa de la infracción original","El doble de la sanción original","Multa independiente muy grave","Retirada del vehículo"],c:1,e:"Art. 93 TRLTSV: el doble de la sanción prevista para la infracción original.",a:"Art. 93 TRLTSV"},
+    {q:"El depósito del vehículo inmovilizado corre a cargo de:",o:["La administración","El titular del vehículo","El conductor","El agente actuante"],c:1,e:"Art. 105 TRLTSV: a cargo del titular.",a:"Art. 105 TRLTSV"},
+    {q:"La retirada del vehículo de la vía pública procede por:",o:["Estacionamiento en paso de peatones","Constituir peligro","Obstaculizar gravemente","Todas son correctas"],c:3,e:"Art. 105 TRLTSV: diversas causas de retirada.",a:"Art. 105 TRLTSV"}
+],
+
+// ===== PROCEDIMIENTO ADMINISTRATIVO (30 PREGUNTAS) =====
+administrativo: [
+    // LEY 39/2015 LPAC (20)
+    {q:"La Ley 39/2015 regula:",o:["El régimen jurídico del sector público","El procedimiento administrativo común","La organización de la AGE","Los contratos públicos"],c:1,e:"Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas.",a:"Ley 39/2015"},
+    {q:"El plazo máximo para resolver y notificar un procedimiento es, con carácter general:",o:["1 mes","3 meses","6 meses","1 año"],c:1,e:"Art. 21 Ley 39/2015: máximo 3 meses si no hay plazo específico.",a:"Art. 21 LPAC"},
+    {q:"El silencio administrativo es, por regla general:",o:["Siempre positivo","Siempre negativo","Positivo en procedimientos iniciados a solicitud","Depende del órgano"],c:2,e:"Art. 24 Ley 39/2015: silencio positivo como regla general en procedimientos iniciados a solicitud.",a:"Art. 24 LPAC"},
+    {q:"El plazo para interponer recurso de alzada es:",o:["10 días","15 días","1 mes","3 meses"],c:2,e:"Art. 122 Ley 39/2015: 1 mes si acto expreso, 3 meses si silencio.",a:"Art. 122 LPAC"},
+    {q:"El recurso de reposición es:",o:["Obligatorio","Potestativo","Solo en vía local","Inexistente"],c:1,e:"Art. 123 Ley 39/2015: recurso potestativo de reposición.",a:"Art. 123 LPAC"},
+    {q:"El plazo para interponer recurso de reposición es:",o:["10 días","15 días","1 mes","3 meses"],c:2,e:"Art. 124 Ley 39/2015: 1 mes si acto expreso.",a:"Art. 124 LPAC"},
+    {q:"La revisión de oficio de actos nulos se puede hacer:",o:["En 4 años","En 5 años","En cualquier momento","Solo con sentencia"],c:2,e:"Art. 106 Ley 39/2015: en cualquier momento mientras produzcan efectos.",a:"Art. 106 LPAC"},
+    {q:"Son causas de nulidad de pleno derecho (art. 47) los actos que:",o:["Lesionen derechos fundamentales","Tengan defectos de forma","Sean anulables","Causen daño económico"],c:0,e:"Art. 47.1.a LPAC: nulos los que lesionen derechos y libertades susceptibles de amparo.",a:"Art. 47 LPAC"},
+    {q:"Los interesados en un procedimiento deben ser:",o:["Solo el solicitante","Personas con derechos o intereses legítimos","Solo funcionarios","Solo mayores de edad"],c:1,e:"Art. 4 Ley 39/2015: quienes promuevan el procedimiento o tengan derechos o intereses legítimos.",a:"Art. 4 LPAC"},
+    {q:"La notificación de un acto debe practicarse en el plazo de:",o:["5 días","10 días","15 días","20 días"],c:1,e:"Art. 40 Ley 39/2015: en el plazo de 10 días a partir del acto.",a:"Art. 40 LPAC"},
+    {q:"Cuando la notificación se practica en el domicilio y no hay nadie, se puede:",o:["Dejar en el buzón","Notificar a vecino o portero","Hacer constar la hora e intentar nueva notificación","Publicar en BOE"],c:2,e:"Art. 42 Ley 39/2015: intentar una sola vez más en hora distinta.",a:"Art. 42 LPAC"},
+    {q:"La notificación por comparecencia procede cuando:",o:["Siempre que se quiera","Cuando no hay domicilio conocido","Cuando hayan fallado los intentos en domicilio","B y C son correctas"],c:3,e:"Art. 44 Ley 39/2015: cuando se desconoce domicilio o fracasan los intentos.",a:"Art. 44 LPAC"},
+    {q:"El cómputo de plazos por días se hace:",o:["En días naturales","En días hábiles","Según indique el procedimiento","En días laborables"],c:1,e:"Art. 30 Ley 39/2015: salvo que se indique días naturales, se entiende hábiles.",a:"Art. 30 LPAC"},
+    {q:"El sábado es día hábil administrativamente:",o:["Siempre","Nunca","Solo para recursos","Solo en AGE"],c:1,e:"Art. 30.2 LPAC: los sábados son inhábiles.",a:"Art. 30 LPAC"},
+    {q:"La declaración responsable es:",o:["Un documento de la Administración","Una manifestación del interesado bajo su responsabilidad","Un certificado notarial","Una autorización previa"],c:1,e:"Art. 69 Ley 39/2015: declaración bajo responsabilidad del interesado.",a:"Art. 69 LPAC"},
+    {q:"La tramitación simplificada del procedimiento tiene un plazo máximo de:",o:["15 días","30 días","2 meses","3 meses"],c:1,e:"Art. 96 Ley 39/2015: máximo 30 días.",a:"Art. 96 LPAC"},
+    {q:"El inicio de un procedimiento sancionador interrumpe:",o:["El plazo de prescripción","La caducidad","Ambas","Ninguna"],c:0,e:"Art. 30 Ley 40/2015: la iniciación interrumpe la prescripción.",a:"Art. 30 LRJSP"},
+    {q:"La caducidad del procedimiento sancionador se produce a los:",o:["3 meses","6 meses","1 año","Según norma reguladora"],c:1,e:"Art. 25 LRJSP: caducidad a los 6 meses si no hay plazo específico.",a:"Art. 25 LRJSP"},
+    {q:"El principio de audiencia al interesado se garantiza:",o:["Antes de la propuesta de resolución","Después de la resolución","Solo si lo pide","En vía de recurso"],c:0,e:"Art. 82 Ley 39/2015: trámite de audiencia antes de propuesta de resolución.",a:"Art. 82 LPAC"},
+    {q:"Los documentos electrónicos tienen la misma validez que:",o:["Los originales en papel","Las copias","Solo si están firmados digitalmente","Ninguna"],c:0,e:"Art. 26 Ley 39/2015: los documentos electrónicos tienen validez original.",a:"Art. 26 LPAC"},
+    
+    // LEY 40/2015 LRJSP (10)
+    {q:"La Ley 40/2015 regula:",o:["El procedimiento administrativo","El régimen jurídico del sector público","Los contratos públicos","El empleo público"],c:1,e:"Ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público.",a:"Ley 40/2015"},
+    {q:"Los principios de la potestad sancionadora incluyen:",o:["Legalidad, tipicidad, proporcionalidad","Irretroactividad, culpabilidad","Presunción de inocencia","Todas son correctas"],c:3,e:"Arts. 25-31 LRJSP: todos estos principios.",a:"Arts. 25-31 LRJSP"},
+    {q:"La responsabilidad patrimonial de la Administración es:",o:["Subjetiva","Objetiva","Solidaria","Subsidiaria"],c:1,e:"Art. 32 LRJSP: responsabilidad objetiva (sin culpa).",a:"Art. 32 LRJSP"},
+    {q:"El plazo para reclamar responsabilidad patrimonial es:",o:["6 meses","1 año","2 años","4 años"],c:1,e:"Art. 67 LPAC: 1 año desde que se produjo el hecho o acto.",a:"Art. 67 LPAC"},
+    {q:"Los convenios entre Administraciones Públicas se regulan en:",o:["Ley 39/2015","Ley 40/2015","Ambas","Ninguna"],c:1,e:"Arts. 47-53 Ley 40/2015: convenios.",a:"Arts. 47-53 LRJSP"},
+    {q:"La delegación de competencias NO puede hacerse para:",o:["Resolución de recursos","Actos de trámite","Instrucción de procedimientos","Informes técnicos"],c:0,e:"Art. 9.2 LRJSP: no puede delegarse la resolución de recursos en órganos delegantes.",a:"Art. 9 LRJSP"},
+    {q:"La avocación es:",o:["Delegación de firma","Asunción por órgano superior de competencia del inferior","Transferencia entre Administraciones","Encomienda de gestión"],c:1,e:"Art. 10 LRJSP: avocación por órgano superior.",a:"Art. 10 LRJSP"},
+    {q:"El principio non bis in idem prohíbe:",o:["Sancionar dos veces por los mismos hechos","Recurrir dos veces","Denunciar dos veces","Absolver dos veces"],c:0,e:"Art. 31 LRJSP: no pueden sancionarse los hechos ya sancionados en vía penal o administrativa.",a:"Art. 31 LRJSP"},
+    {q:"Las infracciones muy graves prescriben a los:",o:["1 año","2 años","3 años","4 años"],c:2,e:"Art. 30 LRJSP: 3 años las muy graves.",a:"Art. 30 LRJSP"},
+    {q:"Las infracciones graves prescriben a los:",o:["6 meses","1 año","2 años","3 años"],c:2,e:"Art. 30 LRJSP: 2 años las graves.",a:"Art. 30 LRJSP"}
+],
+
+// ===== NORMATIVA POLICIAL (20 PREGUNTAS) =====
+policial: [
+    // LO 2/1986 FCSE (10)
+    {q:"La LO 2/1986 regula:",o:["Solo Policía Nacional","Solo Guardia Civil","Todas las Fuerzas y Cuerpos de Seguridad","Solo Policías Locales"],c:2,e:"LO 2/1986, de 13 de marzo, de Fuerzas y Cuerpos de Seguridad.",a:"LO 2/1986"},
+    {q:"Según LO 2/1986, las Policías Locales dependen de:",o:["El Estado","Las CCAA","Los Ayuntamientos","El Ministerio del Interior"],c:2,e:"Art. 52 LO 2/1986: las Policías Locales son institutos armados de naturaleza civil que dependen de los Ayuntamientos.",a:"Art. 52 LO 2/1986"},
+    {q:"Las funciones de las Policías Locales (art. 53) incluyen:",o:["Proteger a autoridades locales","Ordenar el tráfico urbano","Vigilancia de espacios públicos","Todas las anteriores"],c:3,e:"Art. 53 LO 2/1986: todas estas funciones.",a:"Art. 53 LO 2/1986"},
+    {q:"Las Policías Locales solo pueden actuar en:",o:["Todo el territorio nacional","El territorio de su Comunidad Autónoma","El ámbito territorial de su municipio","Donde les ordene el Alcalde"],c:2,e:"Art. 51.3 LO 2/1986: actuarán en el ámbito territorial del municipio.",a:"Art. 51.3 LO 2/1986"},
+    {q:"Los miembros de las FCSE tienen la condición de:",o:["Militares","Agentes de la autoridad","Funcionarios civiles","A y B"],c:1,e:"Art. 7 LO 2/1986: tienen la condición de agentes de la autoridad.",a:"Art. 7 LO 2/1986"},
+    {q:"El principio de congruencia en la actuación policial significa:",o:["Usar medios proporcionales","Actuar según la ley","No utilizar armas","Respetar los derechos humanos"],c:0,e:"Art. 5.2.c LO 2/1986: congruencia, utilizando medios adecuados y proporcionales.",a:"Art. 5.2.c LO 2/1986"},
+    {q:"Los miembros de las FCSE NO pueden:",o:["Pertenecer a partidos políticos","Pertenecer a sindicatos","Ejercer el derecho de huelga","A y C son correctas"],c:2,e:"Art. 6.8 LO 2/1986: no podrán ejercer el derecho de huelga.",a:"Art. 6.8 LO 2/1986"},
+    {q:"El principio de adecuación al ordenamiento jurídico implica actuar con:",o:["Absoluta neutralidad política","Integridad y dignidad","Colaboración con la Justicia","Todas las anteriores"],c:3,e:"Art. 5.1 LO 2/1986: neutralidad, integridad, dignidad, colaboración.",a:"Art. 5.1 LO 2/1986"},
+    {q:"Las Juntas Locales de Seguridad están presididas por:",o:["El Subdelegado del Gobierno","El Delegado del Gobierno","El Alcalde","El Jefe de Policía"],c:2,e:"Art. 54 LO 2/1986: presididas por el Alcalde.",a:"Art. 54 LO 2/1986"},
+    {q:"Las Policías Locales pueden auxiliar a otras FCSE en casos de:",o:["Nunca","Siempre que se lo pidan","Concentraciones de masas y desastres públicos","Solo en manifestaciones"],c:2,e:"Art. 53.1.j LO 2/1986: colaboración en concentraciones, espectáculos, desastres...",a:"Art. 53.1.j LO 2/1986"},
+    
+    // LEY 1/2018 CM (10)
+    {q:"La Ley 1/2018 de la CM regula:",o:["El régimen disciplinario","La coordinación de Policías Locales","Las funciones policiales","La seguridad ciudadana"],c:1,e:"Ley 1/2018, de 22 de febrero, de Coordinación de Policías Locales de la Comunidad de Madrid.",a:"Ley 1/2018 CM"},
+    {q:"El órgano competente en materia de coordinación de Policías Locales en la CM es:",o:["La Delegación del Gobierno","La Consejería competente en seguridad","El Ayuntamiento de Madrid","El CGPJ"],c:1,e:"La Consejería competente en materia de seguridad ciudadana.",a:"Art. 4 Ley 1/2018"},
+    {q:"Las Policías Locales de la CM tienen como funciones propias:",o:["Policía administrativa","Policía de seguridad","Policía judicial","Todas las anteriores"],c:3,e:"Art. 9 Ley 1/2018: policía administrativa, de seguridad, asistencial, judicial, de tráfico.",a:"Art. 9 Ley 1/2018"},
+    {q:"La Ley 1/2018 establece que el uso de la fuerza debe ser:",o:["Proporcional","Congruente","Oportuno","Todas las anteriores"],c:3,e:"Art. 15 Ley 1/2018: proporcional, congruente y oportuno.",a:"Art. 15 Ley 1/2018"},
+    {q:"El Centro de Formación Integral de Seguridad depende de:",o:["El Ministerio del Interior","La Comunidad de Madrid","Cada Ayuntamiento","La Federación de Municipios"],c:1,e:"El CFIS depende de la CM.",a:"Art. 36 Ley 1/2018"},
+    {q:"La segunda actividad para Policías Locales puede ser:",o:["Con destino","Sin destino","Ambas modalidades","Solo por incapacidad"],c:2,e:"Art. 45 Ley 1/2018: segunda actividad con o sin destino.",a:"Art. 45 Ley 1/2018"},
+    {q:"La uniformidad de las Policías Locales de la CM debe ser:",o:["Totalmente libre","Uniforme básico común con distintivos locales","Igual en todos los municipios","La que decida cada Ayuntamiento"],c:1,e:"Art. 26 Ley 1/2018: uniforme básico común, con distintivos del municipio.",a:"Art. 26 Ley 1/2018"},
+    {q:"El Consejo de Policías Locales de la CM es un órgano:",o:["Ejecutivo","Consultivo y de participación","Judicial","Sancionador"],c:1,e:"Art. 6 Ley 1/2018: órgano colegiado consultivo y de participación.",a:"Art. 6 Ley 1/2018"},
+    {q:"Las mancomunidades de municipios pueden crear:",o:["Cuerpos de Policía propios","Servicios de coordinación policial","Academias de formación","Unidades de intervención"],c:1,e:"Art. 60 Ley 1/2018: servicios de coordinación o colaboración.",a:"Art. 60 Ley 1/2018"},
+    {q:"El régimen disciplinario de las Policías Locales de la CM se rige por:",o:["Ley 30/1992","LO 4/2010 (régimen disciplinario CNP)","EBEP únicamente","Normativa municipal"],c:1,e:"Art. 54 Ley 1/2018: LO 4/2010 del régimen disciplinario del CNP.",a:"Art. 54 Ley 1/2018"}
+]
+};
+
+// ==================== CONTENIDO BIBLIOTECA ====================
+const BIBLIOTECA = {
+'ce-preliminar': `
+<h2>📜 TÍTULO PRELIMINAR (Arts. 1-9)</h2>
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE PARA EXAMEN</div>
+<p><strong>Memoriza L-J-I-P:</strong> Libertad, Justicia, Igualdad, Pluralismo político (Art. 1.1)</p>
+</div>
+
+<h3>Art. 1 - Valores y forma política</h3>
+<div class="legal-box">
+<p><span class="art">Art. 1.1:</span> España se constituye en un Estado social y democrático de Derecho, que propugna como valores superiores de su ordenamiento jurídico la <span class="pena">libertad, la justicia, la igualdad y el pluralismo político</span>.</p>
+<p><span class="art">Art. 1.2:</span> La soberanía nacional reside en el <span class="pena">pueblo español</span>, del que emanan los poderes del Estado.</p>
+<p><span class="art">Art. 1.3:</span> La forma política del Estado español es la <span class="pena">Monarquía parlamentaria</span>.</p>
+</div>
+
+<h3>Art. 2 - Unidad nacional</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ PREGUNTA TRAMPA</div>
+<p>La CE se FUNDAMENTA en la "indisoluble unidad de la Nación española" (NO en soberanía, NO en valores superiores)</p>
+</div>
+
+<h3>Art. 3 - Lenguas</h3>
+<p>El castellano es la lengua española oficial del Estado. Todos los españoles tienen el <strong>deber de conocerla</strong> y el <strong>derecho a usarla</strong>.</p>
+
+<h3>Art. 4 - Bandera</h3>
+<div class="legal-box">
+<p>Bandera de España: <span class="pena">tres franjas horizontales, roja, amarilla y roja</span>, siendo la amarilla de <span class="pena">doble anchura</span> que cada una de las rojas.</p>
+</div>
+
+<h3>Art. 5 - Capital</h3>
+<div class="highlight">
+<div class="highlight-title">⚠️ OJO</div>
+<p>La capital del Estado es la <strong>VILLA</strong> de Madrid (no "ciudad")</p>
+</div>
+
+<h3>Arts. 6-7 - Partidos y Sindicatos</h3>
+<p><strong>Art. 6:</strong> Partidos políticos expresan el <strong>pluralismo político</strong>.</p>
+<p><strong>Art. 7:</strong> Sindicatos contribuyen a defensa y promoción de intereses <strong>económicos y sociales</strong>.</p>
+
+<h3>Art. 8 - Fuerzas Armadas</h3>
+<div class="legal-box">
+<p>Misión de las FFAA: garantizar la <span class="pena">soberanía e independencia de España</span>, defender su <span class="pena">integridad territorial</span> y el <span class="pena">ordenamiento constitucional</span>.</p>
+</div>
+
+<h3>Art. 9 - Principios constitucionales</h3>
+<p>Art. 9.3 garantiza: legalidad, jerarquía normativa, <strong>publicidad de las normas</strong>, irretroactividad de disposiciones sancionadoras no favorables, seguridad jurídica, responsabilidad e interdicción de la arbitrariedad.</p>
+`,
+
+'ce-titulo1': `
+<h2>⚖️ TÍTULO I: DERECHOS Y DEBERES (Arts. 10-55)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Mayoría de edad: <strong>18 años</strong> (Art. 12)<br>
+• Detención máxima: <strong>72 horas</strong> (Art. 17.2)<br>
+• Recurso de amparo: Arts. <strong>14-29 + 30.2</strong> (Art. 53.2)</p>
+</div>
+
+<h3>Art. 12 - Mayoría de edad</h3>
+<div class="legal-box">
+<p>Los españoles son mayores de edad a los <span class="pena">dieciocho años</span>.</p>
+</div>
+
+<h3>Art. 15 - Derecho a la vida</h3>
+<p>Todos tienen derecho a la vida y a la integridad física y moral. Queda abolida la pena de muerte.</p>
+
+<h3>Art. 17 - Libertad y detención</h3>
+<div class="legal-box">
+<p><span class="art">Art. 17.2:</span> La detención preventiva no podrá durar más del tiempo estrictamente necesario para la realización de las averiguaciones, y en todo caso, en el plazo máximo de <span class="pena">72 horas</span>, el detenido deberá ser puesto en libertad o a disposición de la autoridad judicial.</p>
+</div>
+
+<h3>Art. 18 - Inviolabilidad del domicilio</h3>
+<div class="highlight info">
+<div class="highlight-title">📋 3 SUPUESTOS DE ENTRADA EN DOMICILIO</div>
+<p>1. Consentimiento del titular<br>
+2. Resolución judicial<br>
+3. Flagrante delito</p>
+</div>
+
+<h3>Art. 21 - Derecho de reunión</h3>
+<p>Se reconoce el derecho de reunión pacífica y sin armas. <strong>NO necesita autorización previa</strong>. En lugares de tránsito público y manifestaciones se comunicará previamente a la autoridad.</p>
+
+<h3>Art. 24 - Tutela judicial efectiva</h3>
+<p>Todas las personas tienen derecho a obtener la tutela efectiva de los jueces y tribunales sin que pueda producirse indefensión.</p>
+
+<h3>Art. 25 - Principio de legalidad penal</h3>
+<div class="legal-box">
+<p><span class="art">Art. 25.2:</span> Las penas privativas de libertad estarán orientadas hacia la <span class="pena">reeducación y reinserción social</span>.</p>
+<p><span class="art">Art. 25.3:</span> La Administración civil <span class="pena">NO puede imponer sanciones que impliquen privación de libertad</span>.</p>
+</div>
+
+<h3>Art. 53 - Protección de derechos</h3>
+<p>Los derechos del Capítulo II, Sección 1ª (arts. 14-29) se tutelan mediante <strong>recurso de amparo</strong> ante el TC.</p>
+
+<h3>Art. 54 - Defensor del Pueblo</h3>
+<p>Designado por las <strong>Cortes Generales</strong> como alto comisionado para la defensa de los derechos.</p>
+`,
+
+'ce-titulo2': `
+<h2>👑 TÍTULO II: LA CORONA (Arts. 56-65)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• El Rey es <strong>Jefe del Estado</strong> (Art. 56)<br>
+• Persona <strong>inviolable</strong> y no sujeta a responsabilidad (Art. 56.3)<br>
+• Actos refrendados por <strong>Presidente del Gobierno</strong> (Art. 64)</p>
+</div>
+
+<h3>Art. 56 - El Rey</h3>
+<div class="legal-box">
+<p><span class="art">Art. 56.1:</span> El Rey es el <span class="pena">Jefe del Estado</span>, símbolo de su unidad y permanencia.</p>
+<p><span class="art">Art. 56.3:</span> La persona del Rey es <span class="pena">inviolable y no está sujeta a responsabilidad</span>.</p>
+</div>
+
+<h3>Art. 57 - Sucesión</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ PREGUNTA FRECUENTE</div>
+<p>En el mismo grado, se prefiere el <strong>varón a la mujer</strong> (pendiente de reforma)</p>
+</div>
+
+<h3>Art. 62 - Funciones del Rey</h3>
+<p>Entre otras: sancionar y promulgar leyes, convocar y disolver Cortes, proponer candidato a Presidente del Gobierno, <strong>mando supremo de las FFAA</strong>.</p>
+
+<h3>Art. 64 - Refrendo</h3>
+<div class="legal-box">
+<p>Los actos del Rey serán refrendados por el <span class="pena">Presidente del Gobierno</span> y, en su caso, por los <span class="pena">Ministros competentes</span>.</p>
+</div>
+`,
+
+'ce-titulo3': `
+<h2>🏛️ TÍTULO III: DE LAS CORTES GENERALES (Arts. 66-96)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Congreso: <strong>300-400</strong> Diputados (Art. 68.1)<br>
+• Senado: Cámara de <strong>representación territorial</strong> (Art. 69.1)<br>
+• NO mandato imperativo (Art. 67.2)<br>
+• Circunscripción electoral: <strong>provincia</strong> (Art. 68.2)</p>
+</div>
+
+<h3>Art. 66 - Cortes Generales</h3>
+<div class="legal-box">
+<p><span class="art">Art. 66.1:</span> Las Cortes Generales <span class="pena">representan al pueblo español</span> y están formadas por el <span class="pena">Congreso de los Diputados y el Senado</span>.</p>
+</div>
+
+<h3>Art. 67 - Mandato imperativo</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ PREGUNTA FRECUENTE</div>
+<p>Los miembros de las Cortes <strong>NO estarán ligados por mandato imperativo</strong></p>
+</div>
+
+<h3>Art. 68 - Congreso</h3>
+<div class="legal-box">
+<p>• Composición: mínimo <span class="pena">300</span>, máximo <span class="pena">400</span> Diputados<br>
+• Circunscripción electoral: <span class="pena">la provincia</span><br>
+• Sistema: proporcional</p>
+</div>
+
+<h3>Art. 69 - Senado</h3>
+<p>Es la Cámara de <strong>representación territorial</strong>.</p>
+
+<h3>Art. 71 - Inviolabilidad e inmunidad</h3>
+<div class="legal-box">
+<p><span class="art">Art. 71.1:</span> <span class="pena">Inviolabilidad</span> por las opiniones manifestadas en el ejercicio de sus funciones.</p>
+<p><span class="art">Art. 71.2:</span> <span class="pena">Inmunidad</span>: solo podrán ser detenidos en caso de <span class="pena">flagrante delito</span>.</p>
+</div>
+
+<h3>Art. 73 - Sesiones</h3>
+<p>Las Cámaras se reunirán anualmente en dos períodos ordinarios de sesiones: <strong>septiembre a diciembre</strong> y <strong>febrero a junio</strong>.</p>
+`,
+
+'ce-titulo4': `
+<h2>🏢 TÍTULO IV: DEL GOBIERNO (Arts. 97-107)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Composición: Presidente + Vicepresidentes + Ministros + demás según ley (Art. 98)<br>
+• Moción de censura: 1/10 del Congreso (Art. 113.2)<br>
+• Cuestión de confianza: la plantea el Presidente (Art. 112)</p>
+</div>
+
+<h3>Art. 97 - Funciones del Gobierno</h3>
+<div class="legal-box">
+<p>El Gobierno dirige la <span class="pena">política interior y exterior</span>, la Administración civil y militar y la defensa del Estado.</p>
+</div>
+
+<h3>Art. 98 - Composición</h3>
+<p>El Gobierno se compone del <strong>Presidente</strong>, de los <strong>Vicepresidentes</strong>, en su caso, de los <strong>Ministros</strong> y de los demás miembros que establezca la ley.</p>
+
+<h3>Art. 99 - Investidura</h3>
+<p>El <strong>Rey propone</strong> un candidato a la Presidencia del Gobierno, tras consulta con los representantes de los grupos políticos.</p>
+
+<h3>Art. 112 - Cuestión de confianza</h3>
+<div class="legal-box">
+<p>El <span class="pena">Presidente del Gobierno</span> puede plantear ante el Congreso la cuestión de confianza sobre su programa o sobre una declaración de política general.</p>
+</div>
+
+<h3>Art. 113 - Moción de censura</h3>
+<div class="legal-box">
+<p><span class="art">Art. 113.2:</span> La moción de censura deberá ser propuesta al menos por la <span class="pena">décima parte de los Diputados</span> (1/10), y habrá de incluir un candidato a la Presidencia del Gobierno.</p>
+</div>
+`,
+
+'ce-titulo6': `
+<h2>⚖️ TÍTULO VI: DEL PODER JUDICIAL (Arts. 117-127)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• La justicia emana del <strong>pueblo</strong> (Art. 117.1)<br>
+• Órgano de gobierno: <strong>CGPJ</strong> (Art. 122.2)<br>
+• Tribunal Supremo: jurisdicción en toda España (Art. 123)</p>
+</div>
+
+<h3>Art. 117 - Principios</h3>
+<div class="legal-box">
+<p><span class="art">Art. 117.1:</span> La justicia emana del <span class="pena">pueblo</span> y se administra en nombre del Rey por Jueces y Magistrados integrantes del poder judicial, <span class="pena">independientes, inamovibles, responsables y sometidos únicamente al imperio de la ley</span>.</p>
+</div>
+
+<h3>Art. 122 - CGPJ</h3>
+<p>El <strong>Consejo General del Poder Judicial</strong> es el órgano de gobierno del mismo.</p>
+
+<h3>Art. 123 - Tribunal Supremo</h3>
+<div class="legal-box">
+<p>El Tribunal Supremo, con <span class="pena">jurisdicción en toda España</span>, es el órgano jurisdiccional superior en todos los órdenes, salvo lo dispuesto en materia de garantías constitucionales.</p>
+</div>
+
+<h3>Art. 124 - Ministerio Fiscal</h3>
+<p>Misión: promover la acción de la justicia en <strong>defensa de la legalidad</strong>, de los derechos de los ciudadanos y del interés público tutelado por la ley.</p>
+`,
+
+'ce-titulo8': `
+<h2>🗺️ TÍTULO VIII: ORGANIZACIÓN TERRITORIAL (Arts. 137-158)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Organización: <strong>municipios, provincias, CCAA</strong> (Art. 137)<br>
+• Provincia: agrupación de municipios (Art. 141)<br>
+• Gobierno municipal: <strong>Ayuntamientos</strong> (Art. 140)</p>
+</div>
+
+<h3>Art. 137 - Organización territorial</h3>
+<div class="legal-box">
+<p>El Estado se organiza territorialmente en <span class="pena">municipios</span>, en <span class="pena">provincias</span> y en las <span class="pena">Comunidades Autónomas</span> que se constituyan.</p>
+</div>
+
+<h3>Art. 140 - Municipios</h3>
+<p>El gobierno y administración de los municipios corresponde a sus respectivos <strong>Ayuntamientos</strong>, integrados por los Alcaldes y los Concejales.</p>
+
+<h3>Art. 141 - Provincia</h3>
+<div class="legal-box">
+<p>La provincia es una entidad local con personalidad jurídica propia, determinada por la <span class="pena">agrupación de municipios</span>.</p>
+</div>
+
+<h3>Art. 155 - Medidas coercitivas</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ ARTÍCULO IMPORTANTE</div>
+<p>Si una CCAA no cumpliere las obligaciones o atentare gravemente al interés general de España, el Gobierno podrá adoptar las medidas necesarias para obligar a aquélla al cumplimiento forzoso.</p>
+</div>
+`,
+
+'d210-estructura': `
+<h2>🏛️ DECRETO 210/2021 - ESTRUCTURA Y ESCALAS</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 ESCALAS Y GRUPOS</div>
+<p>• <strong>Técnica (A1):</strong> Comisario Principal, Comisario, Intendente<br>
+• <strong>Ejecutiva (A2):</strong> Inspector, Subinspector<br>
+• <strong>Básica (C1):</strong> Oficial, Policía</p>
+</div>
+
+<h3>Efectivos mínimos</h3>
+<div class="legal-box">
+<p>• Mínimo: <span class="pena">5 efectivos</span> para crear Cuerpo<br>
+• <span class="pena">Binomio operativo</span>: unidad básica de actuación</p>
+</div>
+
+<h3>Categorías obligatorias por población</h3>
+<div class="highlight info">
+<div class="highlight-title">📊 UMBRALES DE POBLACIÓN</div>
+<p>• > 300.000 hab: <strong>Comisario Principal</strong><br>
+• > 150.000 hab: <strong>Comisario</strong><br>
+• > 80.000 hab: <strong>Intendente</strong><br>
+• > 35.000 hab: <strong>Inspector</strong><br>
+• > 15 efectivos: <strong>Subinspector</strong></p>
+</div>
+`,
+
+'d210-seleccion': `
+<h2>📝 DECRETO 210/2021 - SELECCIÓN Y PROMOCIÓN</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Antigüedad para promoción: <strong>2 años</strong><br>
+• Acceso libre Comisario/Intendente: <strong>6 años</strong><br>
+• Reserva movilidad Policía: <strong>20%</strong> plazas</p>
+</div>
+
+<h3>Promoción interna</h3>
+<div class="legal-box">
+<p>• Antigüedad requerida: <span class="pena">2 años</span> en categoría inferior<br>
+• Acceso libre a Comisario/Intendente: <span class="pena">6 años</span> de servicios efectivos</p>
+</div>
+
+<h3>Movilidad</h3>
+<p>• Reserva del <strong>20%</strong> de plazas en categoría Policía<br>
+• Permanencia mínima: <strong>5 años</strong> en el puesto</p>
+`,
+
+'d210-formacion': `
+<h2>🎓 DECRETO 210/2021 - FORMACIÓN</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Curso básico: <strong>625 horas</strong><br>
+• Curso promoción: <strong>300 horas</strong><br>
+• Calificación mínima: <strong>5/10</strong><br>
+• CFIS: rango <strong>Subdirección General</strong></p>
+</div>
+
+<h3>Duración de cursos</h3>
+<div class="legal-box">
+<p>• Curso selectivo básico: <span class="pena">625 horas</span><br>
+• Curso de promoción: <span class="pena">300 horas</span><br>
+• Nota mínima para superar: <span class="pena">5 sobre 10</span></p>
+</div>
+
+<h3>CFIS</h3>
+<p>El Centro de Formación Integral de Seguridad tiene rango de <strong>Subdirección General</strong>.</p>
+
+<h3>Régimen disciplinario</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ IMPORTANTE</div>
+<p>Se aplica la <strong>LO 4/2010</strong> del régimen disciplinario del CNP</p>
+</div>
+`,
+
+'lo-2-1986': `
+<h2>🛡️ LO 2/1986 - FUERZAS Y CUERPOS DE SEGURIDAD</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Policías Locales dependen de <strong>Ayuntamientos</strong> (Art. 52)<br>
+• Ámbito: <strong>municipal</strong> (Art. 51.3)<br>
+• Juntas Locales: preside <strong>Alcalde</strong> (Art. 54)</p>
+</div>
+
+<h3>Art. 7 - Condición</h3>
+<div class="legal-box">
+<p>Los miembros de las FCSE tienen la condición de <span class="pena">agentes de la autoridad</span>.</p>
+</div>
+
+<h3>Art. 5 - Principios básicos de actuación</h3>
+<div class="highlight info">
+<div class="highlight-title">📋 PRINCIPIOS (Art. 5.2.c)</div>
+<p>• <strong>Congruencia:</strong> medios adecuados y proporcionales<br>
+• <strong>Oportunidad:</strong> intervención solo cuando sea necesaria<br>
+• <strong>Proporcionalidad:</strong> usar los medios menos lesivos</p>
+</div>
+
+<h3>Art. 6.8 - Limitaciones</h3>
+<div class="legal-box">
+<p>Los miembros de las FCSE <span class="pena">NO pueden ejercer el derecho de huelga</span>.</p>
+</div>
+
+<h3>Art. 51.3 - Ámbito territorial</h3>
+<p>Las Policías Locales actuarán en el <strong>ámbito territorial del municipio</strong> respectivo.</p>
+
+<h3>Art. 52 - Dependencia</h3>
+<p>Las Policías Locales son institutos armados de naturaleza civil que dependen de los <strong>Ayuntamientos</strong>.</p>
+
+<h3>Art. 53 - Funciones</h3>
+<p>Proteger autoridades locales, ordenar tráfico urbano, vigilancia de espacios públicos, colaboración con otras FCSE...</p>
+
+<h3>Art. 54 - Juntas Locales de Seguridad</h3>
+<div class="legal-box">
+<p>Están presididas por el <span class="pena">Alcalde</span>.</p>
+</div>
+`,
+
+'ley-1-2018': `
+<h2>📜 LEY 1/2018 CM - COORDINACIÓN POLICÍAS LOCALES</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Uso de la fuerza: <strong>proporcional, congruente, oportuno</strong> (Art. 15)<br>
+• CFIS depende de la <strong>CM</strong> (Art. 36)<br>
+• Segunda actividad: <strong>con o sin destino</strong> (Art. 45)</p>
+</div>
+
+<h3>Art. 4 - Órgano competente</h3>
+<p>La <strong>Consejería competente en materia de seguridad ciudadana</strong>.</p>
+
+<h3>Art. 6 - Consejo de Policías Locales</h3>
+<div class="legal-box">
+<p>Es un órgano colegiado <span class="pena">consultivo y de participación</span>.</p>
+</div>
+
+<h3>Art. 9 - Funciones propias</h3>
+<div class="highlight info">
+<div class="highlight-title">📋 FUNCIONES</div>
+<p>• Policía <strong>administrativa</strong><br>
+• Policía de <strong>seguridad</strong><br>
+• Policía <strong>asistencial</strong><br>
+• Policía <strong>judicial</strong><br>
+• Policía de <strong>tráfico</strong></p>
+</div>
+
+<h3>Art. 15 - Uso de la fuerza</h3>
+<div class="legal-box">
+<p>El uso de la fuerza debe ser <span class="pena">proporcional, congruente y oportuno</span>.</p>
+</div>
+
+<h3>Art. 26 - Uniformidad</h3>
+<p>Uniforme <strong>básico común</strong>, con distintivos del municipio.</p>
+
+<h3>Art. 45 - Segunda actividad</h3>
+<p>Puede ser <strong>con destino</strong> o <strong>sin destino</strong>.</p>
+
+<h3>Art. 54 - Régimen disciplinario</h3>
+<div class="legal-box">
+<p>Se rige por la <span class="pena">LO 4/2010</span> del régimen disciplinario del CNP.</p>
+</div>
+`,
+
+'cp-lesiones': `
+<h2>🩹 CÓDIGO PENAL - LESIONES (Arts. 147-156)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PENAS CLAVE</div>
+<p>• Art. 147.1 básico: <strong>3 meses - 3 años</strong><br>
+• Art. 149 órgano principal: <strong>6 - 12 años</strong><br>
+• Art. 148 agravadas: <strong>2 - 5 años</strong></p>
+</div>
+
+<h3>Art. 147 - Lesiones básicas</h3>
+<div class="legal-box">
+<p><span class="art">Art. 147.1:</span> El que causare a otro una lesión que menoscabe su integridad corporal o su salud física o mental será castigado como reo del delito de lesiones con <span class="pena">prisión de 3 meses a 3 años</span> (requiere tratamiento médico o quirúrgico).</p>
+<p><span class="art">Art. 147.2:</span> Lesión que NO requiera tratamiento: <span class="pena">multa de 1 a 2 meses</span>.</p>
+<p><span class="art">Art. 147.3:</span> Maltrato de obra sin lesión: <span class="pena">multa de 1 a 2 meses</span>.</p>
+</div>
+
+<h3>Art. 148 - Lesiones agravadas</h3>
+<div class="legal-box">
+<p>Prisión de <span class="pena">2 a 5 años</span>:</p>
+<p>• Si se usaren armas, instrumentos, métodos peligrosos<br>
+• Ensañamiento o alevosía<br>
+• Víctima menor de 14 años o persona vulnerable<br>
+• Cónyuge o persona con relación de afectividad</p>
+</div>
+
+<h3>Art. 149 - Pérdida de órgano principal</h3>
+<div class="legal-box">
+<p>Pérdida o inutilidad de un órgano o miembro <span class="pena">principal</span>: prisión de <span class="pena">6 a 12 años</span>.</p>
+<p>Incluye: mutilación genital.</p>
+</div>
+
+<h3>Art. 150 - Pérdida de órgano NO principal</h3>
+<div class="legal-box">
+<p>Pérdida o inutilidad de órgano o miembro <span class="pena">NO principal</span>: prisión de <span class="pena">3 a 6 años</span>.</p>
+</div>
+
+<h3>Art. 154 - Riña tumultuaria</h3>
+<p>Participar en riña con medios peligrosos: <strong>prisión de 3 meses a 1 año</strong> o <strong>multa de 6 a 24 meses</strong>.</p>
+`,
+
+'cp-patrimonio': `
+<h2>💰 CÓDIGO PENAL - DELITOS CONTRA EL PATRIMONIO</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PENAS CLAVE</div>
+<p>• Hurto > 400€: <strong>6 - 18 meses</strong><br>
+• Robo con fuerza: <strong>1 - 3 años</strong><br>
+• Robo con violencia: <strong>2 - 5 años</strong><br>
+• Estafa: <strong>6 meses - 3 años</strong></p>
+</div>
+
+<h3>Hurto (Art. 234)</h3>
+<div class="legal-box">
+<p>• Valor > 400€: <span class="pena">prisión de 6 a 18 meses</span><br>
+• Valor ≤ 400€: delito leve, <span class="pena">multa de 1 a 3 meses</span></p>
+</div>
+
+<h3>Robo con fuerza (Art. 240)</h3>
+<div class="legal-box">
+<p>• Tipo básico: <span class="pena">prisión de 1 a 3 años</span><br>
+• En casa habitada: <span class="pena">prisión de 2 a 5 años</span></p>
+</div>
+
+<h3>Robo con violencia o intimidación (Art. 242)</h3>
+<div class="legal-box">
+<p>• Tipo básico: <span class="pena">prisión de 2 a 5 años</span><br>
+• En casa habitada o con armas: pena superior</p>
+</div>
+
+<h3>Estafa (Art. 248)</h3>
+<div class="legal-box">
+<p>• Tipo básico: <span class="pena">prisión de 6 meses a 3 años</span><br>
+• Agravada (> 50.000€): <span class="pena">prisión de 1 a 6 años</span></p>
+</div>
+
+<h3>Allanamiento de morada (Art. 202)</h3>
+<div class="legal-box">
+<p>• Tipo básico: <span class="pena">prisión de 6 meses a 2 años</span><br>
+• Con violencia o intimidación: <span class="pena">prisión de 1 a 4 años</span></p>
+</div>
+
+<h3>Daños (Art. 263)</h3>
+<p>• Valor > 400€: <strong>prisión de 1 a 3 años</strong> o multa<br>
+• Valor ≤ 400€: delito leve</p>
+`,
+
+'cp-vial': `
+<h2>🚗 CÓDIGO PENAL - SEGURIDAD VIAL (Arts. 379-385)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Tasa penal alcohol: <strong>> 0,60 mg/l aire</strong> o <strong>> 1,2 g/l sangre</strong><br>
+• Exceso velocidad penal: <strong>+ 60 km/h urbana</strong> o <strong>+ 80 km/h interurbana</strong><br>
+• Negativa pruebas: <strong>6 meses - 1 año</strong></p>
+</div>
+
+<h3>Art. 379 - Conducción bajo influencia</h3>
+<div class="legal-box">
+<p><span class="art">Art. 379.2:</span> Conducir con tasa de alcohol superior a <span class="pena">0,60 mg/l en aire espirado</span> o <span class="pena">1,2 g/l en sangre</span>: prisión de <span class="pena">3 a 6 meses</span> o multa de 6 a 12 meses y TBC.</p>
+</div>
+
+<h3>Art. 379.1 - Exceso de velocidad</h3>
+<div class="legal-box">
+<p>• En vía urbana: superar en <span class="pena">60 km/h</span> la velocidad permitida<br>
+• En vía interurbana: superar en <span class="pena">80 km/h</span> la velocidad permitida<br>
+Pena: prisión de <span class="pena">3 a 6 meses</span> o multa o TBC.</p>
+</div>
+
+<h3>Art. 380 - Conducción temeraria</h3>
+<div class="legal-box">
+<p>Conducir con temeridad manifiesta poniendo en peligro la vida o integridad: prisión de <span class="pena">6 meses a 2 años</span>.</p>
+</div>
+
+<h3>Art. 383 - Negativa a pruebas</h3>
+<div class="legal-box">
+<p>Negarse a someterse a las pruebas de detección de alcohol o drogas: prisión de <span class="pena">6 meses a 1 año</span>.</p>
+</div>
+
+<h3>Art. 384 - Conducir sin permiso</h3>
+<div class="legal-box">
+<p>• Sin haber obtenido nunca permiso: <span class="pena">prisión de 3 a 6 meses</span> o multa de 12 a 24 meses<br>
+• Con permiso privado por resolución judicial o administrativa: misma pena</p>
+</div>
+
+<h3>Art. 385 - Alteración de señales</h3>
+<p>Originar grave riesgo alterando señalización o creando obstáculos: <strong>prisión de 6 meses a 2 años</strong>.</p>
+`,
+
+'cp-funcionarios': `
+<h2>🏢 CÓDIGO PENAL - DELITOS DE FUNCIONARIOS (Arts. 404-435)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PENAS CLAVE</div>
+<p>• Prevaricación: <strong>inhabilitación 9 - 15 años</strong><br>
+• Cohecho propio: <strong>3 - 6 años</strong><br>
+• Malversación: <strong>2 - 6 años</strong> (agravada hasta 12)</p>
+</div>
+
+<h3>Art. 404 - Prevaricación administrativa</h3>
+<div class="legal-box">
+<p>Autoridad o funcionario que dictare resolución arbitraria a sabiendas de su injusticia: <span class="pena">inhabilitación especial de 9 a 15 años</span>.</p>
+</div>
+
+<h3>Art. 419 - Cohecho propio</h3>
+<div class="legal-box">
+<p>Solicitar o recibir dádiva para realizar acto contrario a deberes del cargo: prisión de <span class="pena">3 a 6 años</span>, multa e inhabilitación.</p>
+</div>
+
+<h3>Art. 420 - Cohecho impropio</h3>
+<div class="legal-box">
+<p>Solicitar o recibir dádiva para realizar acto NO prohibido legalmente: prisión de <span class="pena">2 a 4 años</span>.</p>
+</div>
+
+<h3>Art. 432 - Malversación</h3>
+<div class="legal-box">
+<p>• Tipo básico: prisión de <span class="pena">2 a 6 años</span><br>
+• Valor > 50.000€: <span class="pena">4 a 8 años</span><br>
+• Valor > 250.000€: <span class="pena">6 a 12 años</span></p>
+</div>
+
+<h3>Art. 24.2 - Concepto de funcionario</h3>
+<div class="highlight info">
+<div class="highlight-title">📋 DEFINICIÓN PENAL</div>
+<p>Toda persona que por disposición de ley, elección o nombramiento <strong>participe en el ejercicio de funciones públicas</strong>.</p>
+</div>
+`,
+
+'cp-drogas': `
+<h2>💊 CÓDIGO PENAL - SALUD PÚBLICA / DROGAS (Arts. 368-378)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PENAS CLAVE</div>
+<p>• Sustancias que causan GRAVE daño: <strong>3 - 6 años</strong><br>
+• Sustancias que NO causan grave daño: <strong>1 - 3 años</strong><br>
+• Organización: <strong>9 - 12 años</strong> (jefes 12-18)</p>
+</div>
+
+<h3>Art. 368 - Tráfico de drogas</h3>
+<div class="legal-box">
+<p>• Sustancias que causan <span class="pena">GRAVE daño</span> a la salud (heroína, cocaína, etc.): prisión de <span class="pena">3 a 6 años</span> y multa.<br>
+• Sustancias que <span class="pena">NO causan grave daño</span> (cannabis, etc.): prisión de <span class="pena">1 a 3 años</span> y multa.</p>
+</div>
+
+<h3>Cantidades de notoria importancia</h3>
+<div class="highlight info">
+<div class="highlight-title">📊 UMBRALES (Acuerdo TS)</div>
+<p>• Cocaína: <strong>750 gramos</strong><br>
+• Heroína: <strong>300 gramos</strong><br>
+• Hachís: <strong>2,5 kilogramos</strong><br>
+• MDMA: <strong>240 gramos</strong></p>
+</div>
+
+<h3>Art. 369 - Agravantes</h3>
+<p>• Adulteración que aumente el daño<br>
+• Venta a menores<br>
+• En centros educativos, militares, penitenciarios<br>
+• Persona de reconocida influencia</p>
+
+<h3>Art. 369 bis - Organización</h3>
+<div class="legal-box">
+<p>• Pertenencia a organización: prisión de <span class="pena">9 a 12 años</span><br>
+• Jefes, encargados o administradores: <span class="pena">12 a 18 años</span></p>
+</div>
+
+<h3>Autoconsumo</h3>
+<div class="highlight success">
+<div class="highlight-title">✓ ATÍPICO</div>
+<p>El autoconsumo NO es delito. La tenencia de cantidades mínimas para consumo propio es atípica penalmente (pero sí infracción administrativa LO 4/2015).</p>
+</div>
+`,
+
+'cp-atentado': `
+<h2>🚨 CÓDIGO PENAL - ATENTADO Y RESISTENCIA (Arts. 550-556)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PENAS CLAVE</div>
+<p>• Atentado a autoridad: <strong>1 - 4 años</strong><br>
+• Atentado a funcionario: <strong>6 meses - 3 años</strong><br>
+• Resistencia: <strong>6 meses - 1 año</strong><br>
+• Desobediencia grave: <strong>multa 1 - 3 meses</strong></p>
+</div>
+
+<h3>Art. 550 - Atentado</h3>
+<div class="legal-box">
+<p>Acometer, emplear violencia, intimidar gravemente o resistirse activamente con violencia a:</p>
+<p>• Autoridad: prisión de <span class="pena">1 a 4 años</span><br>
+• Funcionarios públicos: prisión de <span class="pena">6 meses a 3 años</span></p>
+</div>
+
+<h3>Art. 551 - Agravantes</h3>
+<div class="legal-box">
+<p>• Con armas u objetos peligrosos: pena en <span class="pena">mitad superior</span><br>
+• Si hay lesiones: pena <span class="pena">superior en grado</span></p>
+</div>
+
+<h3>Art. 556 - Resistencia y desobediencia</h3>
+<div class="legal-box">
+<p>• <span class="art">Resistencia</span> (sin violencia o intimidación graves): prisión de <span class="pena">6 meses a 1 año</span><br>
+• <span class="art">Desobediencia grave</span>: <span class="pena">multa de 1 a 3 meses</span></p>
+</div>
+
+<h3>Art. 24.1 - Concepto de autoridad</h3>
+<div class="highlight info">
+<div class="highlight-title">📋 DEFINICIÓN</div>
+<p>Quien por sí solo o como miembro de alguna corporación, tribunal u órgano colegiado tenga <strong>mando o ejerza jurisdicción propia</strong>.</p>
+</div>
+
+<h3>Resistencia pasiva</h3>
+<div class="highlight success">
+<div class="highlight-title">✓ ATÍPICA</div>
+<p>La mera resistencia pasiva (no hacer) NO es delito de resistencia. Requiere oposición activa.</p>
+</div>
+`,
+
+'cp-asociaciones': `
+<h2>👥 CÓDIGO PENAL - ASOCIACIONES ILÍCITAS (Arts. 515-520)</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PENAS CLAVE</div>
+<p>• Fundadores/directores: <strong>2 - 4 años</strong><br>
+• Miembros activos: <strong>1 - 3 años</strong><br>
+• Organización criminal (570 bis): <strong>2 - 5 años</strong></p>
+</div>
+
+<h3>Art. 515 - Asociaciones ilícitas</h3>
+<div class="legal-box">
+<p>Son asociaciones ilícitas:</p>
+<p>1. Las que tengan por <span class="pena">objeto cometer algún delito</span> o promover su comisión<br>
+2. Las <span class="pena">bandas armadas, organizaciones o grupos terroristas</span><br>
+3. Las que fomenten la discriminación, el odio o la violencia</p>
+</div>
+
+<h3>Art. 517 - Penas</h3>
+<div class="legal-box">
+<p>• <span class="art">Fundadores, directores y presidentes:</span> prisión de <span class="pena">2 a 4 años</span><br>
+• <span class="art">Miembros activos:</span> prisión de <span class="pena">1 a 3 años</span></p>
+</div>
+
+<h3>Art. 570 bis - Organización criminal</h3>
+<div class="legal-box">
+<p>Agrupación de más de dos personas, estable y con reparto de tareas:</p>
+<p>• Participación activa: prisión de <span class="pena">2 a 5 años</span><br>
+• Delitos graves (pena > 5 años): prisión de <span class="pena">4 a 8 años</span></p>
+</div>
+`,
+
+'trafico-general': `
+<h2>🛣️ TRLTSV - LEY DE TRÁFICO</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 DATOS CLAVE</div>
+<p>• Puntos iniciales: <strong>12</strong> (noveles 8)<br>
+• Máximo puntos: <strong>15</strong><br>
+• Alegaciones: <strong>20 días</strong><br>
+• Recurso: <strong>1 mes</strong><br>
+• Pronto pago: <strong>50% descuento</strong></p>
+</div>
+
+<h3>Sistema de puntos</h3>
+<div class="legal-box">
+<p>• Crédito inicial: <span class="pena">12 puntos</span> (noveles y profesionales: 8)<br>
+• Máximo alcanzable: <span class="pena">15 puntos</span> (tras 3 años sin sanciones)<br>
+• Pérdida total: suspensión del permiso</p>
+</div>
+
+<h3>Detracción de puntos</h3>
+<div class="highlight info">
+<div class="highlight-title">📊 PUNTOS POR INFRACCIÓN</div>
+<p>• Semáforo rojo: <strong>-4 puntos</strong><br>
+• Uso móvil conduciendo: <strong>-6 puntos</strong><br>
+• Alcohol/Drogas: <strong>-6 puntos</strong><br>
+• No usar cinturón: <strong>-4 puntos</strong><br>
+• Exceso velocidad grave: <strong>-4 a -6 puntos</strong></p>
+</div>
+
+<h3>Prescripción infracciones</h3>
+<div class="legal-box">
+<p>• Infracciones leves: <span class="pena">3 meses</span><br>
+• Infracciones graves: <span class="pena">6 meses</span><br>
+• Infracciones muy graves: <span class="pena">1 año</span></p>
+</div>
+
+<h3>Procedimiento sancionador</h3>
+<p>• Plazo alegaciones: <strong>20 días</strong><br>
+• Recurso de alzada: <strong>1 mes</strong><br>
+• Pronto pago (20 días): <strong>50% descuento</strong> y renuncia a recurso</p>
+`,
+
+'trafico-rgc': `
+<h2>🚦 RGC - REGLAMENTO GENERAL DE CIRCULACIÓN</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 VELOCIDADES MÁXIMAS</div>
+<p>• Autopista/autovía: <strong>120 km/h</strong><br>
+• Convencional: <strong>90 km/h</strong><br>
+• Urbana genérica: <strong>50 km/h</strong><br>
+• Un carril por sentido: <strong>30 km/h</strong><br>
+• Plataforma única: <strong>20 km/h</strong></p>
+</div>
+
+<h3>Prioridad de paso</h3>
+<div class="legal-box">
+<p>Orden de preferencia:</p>
+<p>1. <span class="pena">Agentes de tráfico</span><br>
+2. <span class="pena">Semáforos</span><br>
+3. <span class="pena">Señales verticales</span><br>
+4. <span class="pena">Marcas viales</span><br>
+5. <span class="pena">Normas de prioridad</span></p>
+</div>
+
+<h3>Regla de la derecha</h3>
+<p>En ausencia de señalización, tiene preferencia el vehículo que se aproxime por la <strong>derecha</strong>.</p>
+
+<h3>Señal STOP</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ OBLIGACIÓN</div>
+<p>Obliga a <strong>detención total</strong> del vehículo, aunque no venga nadie.</p>
+</div>
+
+<h3>Semáforo ámbar</h3>
+<p>Obliga a detenerse <strong>si es posible hacerlo en condiciones de seguridad</strong>. Si no es posible, puede continuar con precaución.</p>
+`,
+
+'trafico-alcohol': `
+<h2>🍺 PROCEDIMIENTO ALCOHOLEMIA Y DROGAS</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 TASAS DE ALCOHOL</div>
+<p>• <strong>General:</strong> 0,25 mg/l aire = 0,5 g/l sangre<br>
+• <strong>Noveles/profesionales:</strong> 0,15 mg/l = 0,3 g/l<br>
+• <strong>Tasa penal:</strong> > 0,60 mg/l aire = > 1,2 g/l sangre</p>
+</div>
+
+<h3>Procedimiento de control</h3>
+<div class="legal-box">
+<p>1. Primera prueba con etilómetro evidencial<br>
+2. Si positivo o el interesado lo solicita: <span class="pena">segunda prueba a los 10 minutos mínimo</span><br>
+3. Derecho a solicitar <span class="pena">contraste mediante análisis de sangre</span></p>
+</div>
+
+<h3>Negativa a pruebas</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ CONSECUENCIAS</div>
+<p>• <strong>Delito</strong> del art. 383 CP: prisión de 6 meses a 1 año<br>
+• <strong>Infracción administrativa</strong> muy grave: 1.000€ y -6 puntos</p>
+</div>
+
+<h3>Inmovilización del vehículo</h3>
+<p>Procede cuando:<br>
+• Tasa de alcohol superior al permitido<br>
+• Carecer de seguro obligatorio<br>
+• Deficiencias graves del vehículo</p>
+
+<h3>Etilómetros</h3>
+<p>Deben estar <strong>autorizados</strong> y <strong>verificados metrológicamente</strong>.</p>
+`,
+
+'ley-39-2015': `
+<h2>📄 LEY 39/2015 - PROCEDIMIENTO ADMINISTRATIVO COMÚN</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PLAZOS CLAVE</div>
+<p>• Resolver: <strong>3 meses</strong> (salvo norma especial)<br>
+• Recurso alzada: <strong>1 mes</strong><br>
+• Recurso reposición: <strong>1 mes</strong> (potestativo)<br>
+• Notificación: <strong>10 días</strong> desde acto</p>
+</div>
+
+<h3>Art. 21 - Obligación de resolver</h3>
+<div class="legal-box">
+<p>Plazo máximo: <span class="pena">3 meses</span>, salvo que una norma con rango de Ley o la normativa europea establezca otro.</p>
+</div>
+
+<h3>Silencio administrativo</h3>
+<div class="legal-box">
+<p>• Regla general: <span class="pena">silencio POSITIVO</span> (se entiende estimada)<br>
+• Excepciones (silencio negativo): transferencia facultades dominio público, recursos, procedimientos sancionadores...</p>
+</div>
+
+<h3>Recursos administrativos</h3>
+<div class="highlight info">
+<div class="highlight-title">📋 PLAZOS</div>
+<p>• <strong>Recurso de alzada:</strong> 1 mes (contra actos no finalizadores de vía)<br>
+• <strong>Recurso de reposición:</strong> 1 mes (potestativo, contra actos que agotan vía)<br>
+• <strong>Revisión de oficio:</strong> cualquier momento (actos nulos)</p>
+</div>
+
+<h3>Art. 30 - Cómputo de plazos</h3>
+<div class="legal-box">
+<p>• Plazos por días: días <span class="pena">hábiles</span> (salvo que se diga naturales)<br>
+• <span class="pena">Sábados son inhábiles</span></p>
+</div>
+
+<h3>Art. 82 - Trámite de audiencia</h3>
+<p>Se concede <strong>antes de la propuesta de resolución</strong> para que el interesado alegue y presente documentos.</p>
+
+<h3>Art. 26 - Documentos electrónicos</h3>
+<p>Tienen la misma validez que los <strong>originales en papel</strong>.</p>
+
+<h3>Art. 96 - Tramitación simplificada</h3>
+<p>Plazo máximo: <strong>30 días</strong>.</p>
+`,
+
+'ley-40-2015': `
+<h2>🏛️ LEY 40/2015 - RÉGIMEN JURÍDICO DEL SECTOR PÚBLICO</h2>
+
+<div class="highlight">
+<div class="highlight-title">🎯 PRESCRIPCIÓN INFRACCIONES</div>
+<p>• Muy graves: <strong>3 años</strong><br>
+• Graves: <strong>2 años</strong><br>
+• Leves: <strong>1 año</strong></p>
+</div>
+
+<h3>Principios potestad sancionadora (Arts. 25-31)</h3>
+<div class="legal-box">
+<p>• <span class="pena">Legalidad</span>: solo por infracciones previstas en ley<br>
+• <span class="pena">Tipicidad</span>: conductas descritas con precisión<br>
+• <span class="pena">Proporcionalidad</span>: sanción adecuada a la infracción<br>
+• <span class="pena">Irretroactividad</span>: salvo favorable<br>
+• <span class="pena">Culpabilidad</span>: dolo o culpa<br>
+• <span class="pena">Presunción de inocencia</span></p>
+</div>
+
+<h3>Art. 31 - Non bis in idem</h3>
+<div class="highlight danger">
+<div class="highlight-title">⚠️ PRINCIPIO FUNDAMENTAL</div>
+<p>No pueden sancionarse los hechos que ya hayan sido sancionados penal o administrativamente cuando exista <strong>identidad de sujeto, hecho y fundamento</strong>.</p>
+</div>
+
+<h3>Art. 30 - Prescripción</h3>
+<div class="legal-box">
+<p>• Infracciones muy graves: <span class="pena">3 años</span><br>
+• Infracciones graves: <span class="pena">2 años</span><br>
+• Infracciones leves: <span class="pena">1 año</span><br>
+(Salvo que las leyes especiales dispongan otra cosa)</p>
+</div>
+
+<h3>Responsabilidad patrimonial (Art. 32)</h3>
+<div class="legal-box">
+<p>• Carácter <span class="pena">OBJETIVO</span> (sin culpa)<br>
+• Plazo para reclamar: <span class="pena">1 año</span> desde que se produjo el hecho</p>
+</div>
+
+<h3>Art. 9 - Delegación de competencias</h3>
+<p><strong>NO puede delegarse</strong> la resolución de recursos en los órganos que dictaron el acto recurrido.</p>
+
+<h3>Art. 10 - Avocación</h3>
+<p>Asunción por el <strong>órgano superior</strong> de la competencia del inferior para resolver un asunto concreto.</p>
+
+<h3>Art. 25 - Caducidad procedimiento sancionador</h3>
+<p>Se produce a los <strong>6 meses</strong> si no hay plazo específico.</p>
+`
+};
+
+// ==================== FRASES MOTIVACIONALES ====================
+const QUOTES = [
+    {text: "El dolor de la disciplina pesa gramos, el del arrepentimiento pesa toneladas.", author: "Jim Rohn"},
+    {text: "No cuentes los días, haz que los días cuenten.", author: "Muhammad Ali"},
+    {text: "La victoria pertenece al más perseverante.", author: "Napoleón Bonaparte"},
+    {text: "El éxito no es la clave de la felicidad. La felicidad es la clave del éxito.", author: "Albert Schweitzer"},
+    {text: "Cada día es una nueva oportunidad para cambiar tu vida.", author: "Anónimo"},
+    {text: "El único modo de hacer un gran trabajo es amar lo que haces.", author: "Steve Jobs"},
+    {text: "La diferencia entre ordinario y extraordinario es ese pequeño extra.", author: "Jimmy Johnson"},
+    {text: "Cree en ti mismo y todo será posible.", author: "Anónimo"},
+    {text: "30 minutos al día = Tu plaza asegurada.", author: "PMM Command Center"},
+    {text: "Un guerrero no abandona lo que ama. Encuentra el amor en lo que hace.", author: "Dan Millman"}
+];
+
+// ==================== PLAN SEMANAL ====================
+const WEEKLY_TASKS = [
+    {day: 'Lunes', task: '📜 CE Título Preliminar + 20 tests', key: 'lun'},
+    {day: 'Martes', task: '⚖️ Código Penal Lesiones + 20 tests', key: 'mar'},
+    {day: 'Miércoles', task: '📋 Decreto 210/2021 + 20 tests', key: 'mie'},
+    {day: 'Jueves', task: '🚗 Tráfico + Velocidades + 20 tests', key: 'jue'},
+    {day: 'Viernes', task: '📄 Ley 39/2015 LPAC + 20 tests', key: 'vie'},
+    {day: 'Sábado', task: '🔄 Repaso general + Simulacro 50', key: 'sab'},
+    {day: 'Domingo', task: '🧘 Descanso o repaso ligero', key: 'dom'}
+];
+
+// ==================== VARIABLES ESTADO ====================
+let currentModule = 'biblioteca';
+let currentTest = { mode: null, tema: null, questions: [], current: 0, lives: 3, correct: 0, incorrect: 0, streak: 0, bestStreak: 0, answered: false, startTime: null, timerInterval: null };
+
+// ==================== INICIALIZACIÓN ====================
+function init() {
+    loadData();
+    loadContent('ce-preliminar');
+    updateStats();
+    renderSchedule();
+    newQuote();
+    document.getElementById('testArea').style.display = 'none';
+    document.getElementById('testResults').style.display = 'none';
+}
+
+function loadData() {
+    try {
+        const saved = localStorage.getItem('pmm_db');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            Object.assign(DB.stats, parsed.stats || {});
+            Object.assign(DB.subjects, parsed.subjects || {});
+            Object.assign(DB.plan, parsed.plan || {});
+        }
+    } catch(e) { console.log('Error loading data', e); }
+}
+
+function saveData() {
+    try {
+        localStorage.setItem('pmm_db', JSON.stringify(DB));
+    } catch(e) { console.log('Error saving data', e); }
+}
+
+// ==================== NAVEGACIÓN ====================
+function showModule(mod) {
+    document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('mod-' + mod).classList.add('active');
+    document.querySelectorAll('.nav-tab')[['biblioteca','tests','analytics','plan'].indexOf(mod)].classList.add('active');
+    currentModule = mod;
+    
+    if (mod === 'analytics') renderAnalytics();
+    if (mod === 'tests') resetTestUI();
+}
+
+// ==================== BIBLIOTECA ====================
+function loadContent(key) {
+    document.querySelectorAll('.bib-nav-item').forEach(item => item.classList.remove('active'));
+    event.target.closest('.bib-nav-item')?.classList.add('active');
+    
+    const content = BIBLIOTECA[key];
+    if (content) {
+        document.getElementById('bibArticle').innerHTML = content;
+    } else {
+        document.getElementById('bibArticle').innerHTML = '<p style="color:var(--text3)">Contenido no disponible</p>';
+    }
+}
+
+function filterBib() {
+    const search = document.getElementById('bibSearch').value.toLowerCase();
+    document.querySelectorAll('.bib-nav-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(search) ? 'flex' : 'none';
+    });
+}
+
+// ==================== TESTS ====================
+function resetTestUI() {
+    document.getElementById('testMenu').style.display = 'block';
+    document.getElementById('testArea').style.display = 'none';
+    document.getElementById('testResults').style.display = 'none';
+    document.getElementById('temaSelector').style.display = 'none';
+}
+
+function selectMode(mode) {
+    currentTest.mode = mode;
+    document.getElementById('temaSelector').style.display = 'block';
+}
+
+function selectTema(tema) {
+    currentTest.tema = tema;
+    startTest();
+}
+
+function startTest() {
+    // Preparar preguntas
+    let allQ = [];
+    if (currentTest.tema === 'todos') {
+        Object.keys(QUESTIONS).forEach(k => {
+            QUESTIONS[k].forEach(q => allQ.push({...q, tema: k}));
+        });
+    } else {
+        QUESTIONS[currentTest.tema]?.forEach(q => allQ.push({...q, tema: currentTest.tema}));
+    }
+    
+    // Mezclar
+    allQ = allQ.sort(() => Math.random() - 0.5);
+    
+    // Limitar según modo
+    const limits = { combate: 999, neural: 50, simulacro: 100, zen: 999 };
+    currentTest.questions = allQ.slice(0, limits[currentTest.mode] || 50);
+    
+    // Reset estado
+    currentTest.current = 0;
+    currentTest.lives = currentTest.mode === 'combate' ? 3 : 999;
+    currentTest.correct = 0;
+    currentTest.incorrect = 0;
+    currentTest.streak = 0;
+    currentTest.bestStreak = 0;
+    currentTest.answered = false;
+    currentTest.startTime = Date.now();
+    
+    // UI
+    document.getElementById('testMenu').style.display = 'none';
+    document.getElementById('testArea').style.display = 'block';
+    document.getElementById('testResults').style.display = 'none';
+    
+    // Timer
+    if (currentTest.timerInterval) clearInterval(currentTest.timerInterval);
+    currentTest.timerInterval = setInterval(updateTimer, 1000);
+    
+    updateLives();
+    showQuestion();
+}
+
+function showQuestion() {
+    if (currentTest.current >= currentTest.questions.length) {
+        endTest();
+        return;
+    }
+    
+    const q = currentTest.questions[currentTest.current];
+    currentTest.answered = false;
+    
+    document.getElementById('testBadge').textContent = (DB.subjects[q.tema]?.name || q.tema).toUpperCase();
+    document.getElementById('testCount').textContent = `Pregunta ${currentTest.current + 1} de ${currentTest.questions.length}`;
+    document.getElementById('qNumber').textContent = `Q${currentTest.current + 1}`;
+    document.getElementById('qText').textContent = q.q;
+    
+    // Progreso
+    const pct = ((currentTest.current) / currentTest.questions.length) * 100;
+    document.getElementById('testProgressFill').style.width = pct + '%';
+    
+    // Opciones
+    const optContainer = document.getElementById('optionsContainer');
+    optContainer.innerHTML = '';
+    q.o.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span class="opt-letter">${String.fromCharCode(65+i)}</span><span class="opt-text">${opt}</span>`;
+        btn.onclick = () => selectAnswer(i);
+        optContainer.appendChild(btn);
+    });
+    
+    // Ocultar feedback y botón siguiente
+    document.getElementById('feedbackBox').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectAnswer(idx) {
+    if (currentTest.answered) return;
+    currentTest.answered = true;
+    
+    const q = currentTest.questions[currentTest.current];
+    const isCorrect = idx === q.c;
+    
+    // Marcar opciones
+    const opts = document.querySelectorAll('.option-btn');
+    opts.forEach((opt, i) => {
+        opt.classList.add('disabled');
+        if (i === q.c) opt.classList.add('correct');
+        if (i === idx && !isCorrect) opt.classList.add('incorrect');
+    });
+    
+    // Actualizar estadísticas
+    if (isCorrect) {
+        currentTest.correct++;
+        currentTest.streak++;
+        if (currentTest.streak > currentTest.bestStreak) currentTest.bestStreak = currentTest.streak;
+        DB.stats.correct++;
+        if (DB.subjects[q.tema]) {
+            DB.subjects[q.tema].correct++;
+            DB.subjects[q.tema].total++;
+        }
+    } else {
+        currentTest.incorrect++;
+        currentTest.streak = 0;
+        if (currentTest.mode === 'combate') currentTest.lives--;
+        DB.stats.incorrect++;
+        if (DB.subjects[q.tema]) {
+            DB.subjects[q.tema].total++;
+        }
+    }
+    
+    // Mostrar feedback
+    const fb = document.getElementById('feedbackBox');
+    fb.style.display = 'block';
+    fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+    document.getElementById('feedbackTitle').textContent = isCorrect ? '✓ ¡CORRECTO!' : '✗ INCORRECTO';
+    document.getElementById('feedbackExp').textContent = q.e;
+    document.getElementById('feedbackArt').textContent = q.a;
+    
+    // Botón siguiente
+    document.getElementById('nextBtn').style.display = 'inline-flex';
+    
+    // Actualizar vidas y stats
+    updateLives();
+    updateStats();
+    saveData();
+    
+    // Verificar game over
+    if (currentTest.mode === 'combate' && currentTest.lives <= 0) {
+        setTimeout(endTest, 1500);
+    }
+}
+
+function nextQuestion() {
+    currentTest.current++;
+    showQuestion();
+}
+
+function updateLives() {
+    const ld = document.getElementById('livesDisplay');
+    if (currentTest.mode === 'combate') {
+        ld.innerHTML = '❤️'.repeat(currentTest.lives) + '🖤'.repeat(3 - currentTest.lives);
+    } else {
+        ld.innerHTML = '';
+    }
+}
+
+function updateTimer() {
+    const elapsed = Math.floor((Date.now() - currentTest.startTime) / 1000);
+    const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const secs = (elapsed % 60).toString().padStart(2, '0');
+    document.getElementById('testTimer').textContent = `${mins}:${secs}`;
+    
+    // Simulacro: 90 min limit
+    if (currentTest.mode === 'simulacro' && elapsed >= 5400) {
+        endTest();
+    }
+}
+
+function endTest() {
+    if (currentTest.timerInterval) {
+        clearInterval(currentTest.timerInterval);
+        currentTest.timerInterval = null;
+    }
+    
+    // Actualizar estadísticas globales
+    DB.stats.tests++;
+    if (currentTest.bestStreak > DB.stats.bestStreak) {
+        DB.stats.bestStreak = currentTest.bestStreak;
+    }
+    
+    // Calcular tiempo
+    const elapsed = Math.floor((Date.now() - currentTest.startTime) / 1000);
+    const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+    const secs = (elapsed % 60).toString().padStart(2, '0');
+    
+    // Mostrar resultados
+    document.getElementById('testArea').style.display = 'none';
+    document.getElementById('testResults').style.display = 'block';
+    
+    const total = currentTest.correct + currentTest.incorrect;
+    const acc = total > 0 ? Math.round((currentTest.correct / total) * 100) : 0;
+    
+    document.getElementById('resultsIcon').textContent = acc >= 70 ? '🏆' : acc >= 50 ? '💪' : '📚';
+    document.getElementById('resultsTitle').textContent = acc >= 70 ? '¡VICTORIA!' : acc >= 50 ? '¡BUEN INTENTO!' : 'SIGUE ENTRENANDO';
+    document.getElementById('resultsSub').textContent = currentTest.mode === 'combate' && currentTest.lives <= 0 ? 'Te quedaste sin vidas' : 'Resultados del combate';
+    
+    document.getElementById('resCor').textContent = currentTest.correct;
+    document.getElementById('resInc').textContent = currentTest.incorrect;
+    document.getElementById('resAcc').textContent = acc + '%';
+    document.getElementById('resStreak').textContent = currentTest.bestStreak;
+    document.getElementById('resTime').textContent = `${mins}:${secs}`;
+    
+    updateStats();
+    saveData();
+}
+
+function restartTest() {
+    startTest();
+}
+
+function backToMenu() {
+    resetTestUI();
+}
+
+// ==================== ANALYTICS ====================
+function renderAnalytics() {
+    // Precisión global
+    const total = DB.stats.correct + DB.stats.incorrect;
+    const globalAcc = total > 0 ? Math.round((DB.stats.correct / total) * 100) : 0;
+    document.getElementById('predictionPct').textContent = globalAcc + '%';
+    
+    // Stats globales
+    document.getElementById('anTotalTests').textContent = DB.stats.tests;
+    document.getElementById('anTotalQ').textContent = total;
+    document.getElementById('anBestStreak').textContent = DB.stats.bestStreak;
+    document.getElementById('anStudyDays').textContent = DB.stats.studyDays || 0;
+    
+    // Por materia
+    const subContainer = document.getElementById('subjectsAnalytics');
+    subContainer.innerHTML = '';
+    
+    Object.keys(DB.subjects).forEach(key => {
+        const sub = DB.subjects[key];
+        const acc = sub.total > 0 ? Math.round((sub.correct / sub.total) * 100) : 0;
+        subContainer.innerHTML += `
+            <div style="display:flex;align-items:center;gap:15px;padding:15px;background:var(--bg);border-radius:10px;margin-bottom:10px">
+                <span style="font-size:1.5rem">${sub.icon}</span>
+                <div style="flex:1">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                        <span style="font-weight:600">${sub.name}</span>
+                        <span style="color:${acc >= 70 ? 'var(--green)' : acc >= 50 ? 'var(--gold)' : 'var(--red)'}">${acc}%</span>
+                    </div>
+                    <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+                        <div style="height:100%;width:${acc}%;background:${sub.color};transition:width .5s"></div>
+                    </div>
+                    <div style="font-size:.75rem;color:var(--text3);margin-top:5px">${sub.correct}/${sub.total} correctas</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Recomendaciones
+    const recs = document.getElementById('recommendations');
+    recs.innerHTML = '';
+    
+    // Encontrar materia más débil
+    let weakest = null;
+    let weakestAcc = 100;
+    Object.keys(DB.subjects).forEach(key => {
+        const sub = DB.subjects[key];
+        if (sub.total >= 5) {
+            const acc = (sub.correct / sub.total) * 100;
+            if (acc < weakestAcc) {
+                weakestAcc = acc;
+                weakest = sub;
+            }
+        }
+    });
+    
+    if (weakest && weakestAcc < 70) {
+        recs.innerHTML += `
+            <div class="highlight danger">
+                <div class="highlight-title">🎯 PRIORIDAD</div>
+                <p>Refuerza <strong>${weakest.name}</strong> (${Math.round(weakestAcc)}%). Dedica más tiempo a esta materia.</p>
+            </div>
+        `;
+    }
+    
+    if (globalAcc >= 70) {
+        recs.innerHTML += `
+            <div class="highlight success">
+                <div class="highlight-title">🏆 EXCELENTE</div>
+                <p>Tu precisión global (${globalAcc}%) está en zona de aprobado. ¡Mantén el ritmo!</p>
+            </div>
+        `;
+    } else {
+        recs.innerHTML += `
+            <div class="highlight info">
+                <div class="highlight-title">📈 OBJETIVO</div>
+                <p>Necesitas llegar al 70% de precisión. Actualmente estás en ${globalAcc}%.</p>
+            </div>
+        `;
+    }
+}
+
+// ==================== PLAN ====================
+function renderSchedule() {
+    const tbody = document.getElementById('scheduleBody');
+    tbody.innerHTML = '';
+    
+    WEEKLY_TASKS.forEach(t => {
+        const checked = DB.plan.days[t.key] ? 'checked' : '';
+        tbody.innerHTML += `
+            <tr>
+                <td style="font-weight:600">${t.day}</td>
+                <td>${t.task}</td>
+                <td style="text-align:center">
+                    <input type="checkbox" ${checked} onchange="toggleDay('${t.key}')" style="width:20px;height:20px;cursor:pointer">
+                </td>
+            </tr>
+        `;
+    });
+    
+    updateWeekProgress();
+}
+
+function toggleDay(key) {
+    DB.plan.days[key] = !DB.plan.days[key];
+    updateWeekProgress();
+    saveData();
+}
+
+function updateWeekProgress() {
+    const completed = Object.values(DB.plan.days).filter(v => v).length;
+    const pct = Math.round((completed / 7) * 100);
+    DB.plan.weekPct = pct;
+    
+    document.getElementById('weekProgressFill').style.width = pct + '%';
+    document.getElementById('weekPct').textContent = pct + '%';
+    document.getElementById('weekBadge').textContent = `SEMANA ${DB.plan.week || 1}`;
+}
+
+function newQuote() {
+    const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    document.getElementById('motivationQuote').textContent = `"${q.text}"`;
+    document.getElementById('motivationAuthor').textContent = `— ${q.author}`;
+}
+
+// ==================== ESTADÍSTICAS HEADER ====================
+function updateStats() {
+    const total = DB.stats.correct + DB.stats.incorrect;
+    const acc = total > 0 ? Math.round((DB.stats.correct / total) * 100) : 0;
+    
+    document.getElementById('globalTests').textContent = DB.stats.tests;
+    document.getElementById('globalAcc').textContent = acc + '%';
+    document.getElementById('globalStreak').textContent = DB.stats.bestStreak;
+}
+
+// ==================== TECLADO ====================
+document.addEventListener('keydown', e => {
+    if (currentModule !== 'tests' || document.getElementById('testArea').style.display === 'none') return;
+    
+    if (!currentTest.answered) {
+        if (e.key >= '1' && e.key <= '4') {
+            selectAnswer(parseInt(e.key) - 1);
+        }
+    } else {
+        if (e.key === 'Enter') {
+            nextQuestion();
+        }
+    }
+    
+    if (e.key === 'Escape') {
+        endTest();
+    }
+});
+
+// ==================== INICIAR ====================
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
